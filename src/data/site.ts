@@ -211,6 +211,7 @@ export const sections: Section[] = [
     entries: [
       {
         id: "somnia",
+        href: "https://projectsomnia.com",
         image: "/assets/activities/somnia.svg",
         title: "Somnia",
         org: "Sleep-tech Startup — Northwestern Garage",
@@ -259,6 +260,7 @@ export const sections: Section[] = [
       },
       {
         id: "netflix",
+        href: "https://www.researchgate.net/publication/388502227_How_do_Media_Releases_Affect_Netflix's_Stock",
         image: "/assets/activities/netflix.svg",
         title: "Netflix Releases & Stock Price Volatility",
         role: "Research Author",
@@ -272,6 +274,7 @@ export const sections: Section[] = [
       },
       {
         id: "sura",
+        href: "https://adamlab.sesp.northwestern.edu/project-overview/",
         image: "/assets/activities/sura.svg",
         title: "IPR SURA Grant",
         org: "Northwestern SESP",

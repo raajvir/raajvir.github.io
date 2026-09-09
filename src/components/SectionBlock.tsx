@@ -16,6 +16,13 @@ import "./SectionBlock.css";
  * the start. Any other section `kind` still falls back to this layout
  * rather than rendering nothing.
  */
+/** Card size as a fraction of the row — must match .sec-art in the CSS. */
+const ART_W = 0.4;
+const ART_H = 0.55;
+
+const clamp = (v: number, lo: number, hi: number) =>
+  Math.min(Math.max(v, lo), hi);
+
 export function SectionBlock({ section }: { section: Section }) {
   const reduced = usePrefersReducedMotion();
   const labelId = `${section.id}-label`;
@@ -31,8 +38,8 @@ export function SectionBlock({ section }: { section: Section }) {
 
   // One delegated pointermove/pointerleave pair on the list, rather than a
   // handler per entry — cheaper, and avoids needing to thread refs through
-  // the shared <Reveal> wrapper. Toggles a class directly rather than using
-  // React state, so hovering never triggers a re-render.
+  // the shared <Reveal> wrapper. Writes CSS custom properties directly rather
+  // than using React state, so trailing the cursor never re-renders.
   useEffect(() => {
     if (!artEnabled) return;
     const list = listRef.current;
@@ -55,6 +62,16 @@ export function SectionBlock({ section }: { section: Section }) {
         entry.classList.add("sec-entry--art-active");
         activeArtRef.current = entry;
       }
+
+      // Keep the card fully inside the row: clamp the centre by half the
+      // card's size. These fractions mirror the width/height in the CSS.
+      const rect = entry.getBoundingClientRect();
+      const halfW = (rect.width * ART_W) / 2;
+      const halfH = (rect.height * ART_H) / 2;
+      const x = clamp(event.clientX - rect.left, halfW, rect.width - halfW);
+      const y = clamp(event.clientY - rect.top, halfH, rect.height - halfH);
+      entry.style.setProperty("--art-x", `${x}px`);
+      entry.style.setProperty("--art-y", `${y}px`);
     }
 
     list.addEventListener("pointermove", handlePointerMove);

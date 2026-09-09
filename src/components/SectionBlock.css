@@ -49,47 +49,47 @@
   transform-origin: top center;
 }
 
-/* ---------- cursor-revealed background art ----------
-   First child of a `.sec-entry--has-art` row, painted behind the text
-   (z-index 0, content above it at z-index 1). Masked to a circle that
-   follows the pointer via --art-x/--art-y (set from a JS pointermove
-   handler); revealed by fading the whole layer's opacity in on hover
-   rather than animating the mask radius. The art is dark line-art, so it
-   reads as a faint texture on a white section and much more visibly once
-   the section inverts to black. */
+/* ---------- cursor-trailing photo ----------
+   A small preview card, roughly 40% of the row, that floats above the text
+   and trails the pointer while it is inside the row. Position comes from
+   --art-x/--art-y (px, set by a JS pointermove handler and already clamped
+   there so the card never leaves the row). The lag comes from transitioning
+   the transform, which keeps it on the compositor. */
 .sec-art {
-  /* Timing-tower entries reveal their photo across the WHOLE row on hover —
-     no cursor circle — and the text steps aside while it is showing. */
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  width: 40%;
+  height: 55%;
   pointer-events: none;
   background-size: cover;
   background-position: center;
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
+  /* The 50% offsets centre the card on the pointer. */
+  transform: translate(calc(var(--art-x, 50%) - 50%), calc(var(--art-y, 50%) - 50%))
+    scale(0.94);
+  transition: transform 0.34s var(--ease-out), opacity 0.28s var(--ease-out);
 }
 
 .sec-entry--art-active .sec-art {
   opacity: 1;
+  transform: translate(calc(var(--art-x, 50%) - 50%), calc(var(--art-y, 50%) - 50%))
+    scale(1);
 }
 
-/* Text fades out rather than unmounting, so it stays in the accessibility
-   tree and the row keeps its height while the photo is up. */
-.sec-entry--has-art .sec-content,
-.sec-entry--has-art .sec-date {
-  transition: opacity 0.35s var(--ease-out);
-}
-
-.sec-entry--art-active .sec-content,
-.sec-entry--art-active .sec-date {
-  opacity: 0;
-}
-
-/* The photo needs room to read as an image, not a sliver. */
+/* Room for the card to read as an image rather than a sliver. */
 .sec-entry--has-art {
   min-height: 260px;
+}
+
+@media (max-width: 900px) {
+  /* No pointer to trail — the layer is not rendered at all below this. */
+  .sec-entry--has-art {
+    min-height: 0;
+  }
 }
 
 /* Purple is meaningful, not a generic hover colour: only a genuine
