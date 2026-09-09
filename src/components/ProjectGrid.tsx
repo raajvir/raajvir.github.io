@@ -76,7 +76,9 @@ function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
 
   const hasArt = canSpotlight && Boolean(entry.image);
 
-  const bottomContent = entry.pullQuote ? (
+  const bottomContent = entry.summary ? (
+    <p className="proj-bullet">{entry.summary}</p>
+  ) : entry.pullQuote ? (
     <blockquote className="proj-quote">{entry.pullQuote}</blockquote>
   ) : entry.bullets && entry.bullets.length > 0 ? (
     <p className="proj-bullet">{entry.bullets[0]}</p>

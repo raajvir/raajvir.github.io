@@ -136,6 +136,8 @@ export function SectionBlock({ section }: { section: Section }) {
 
                   {entry.stats && entry.stats.length > 0 && <StatRow stats={entry.stats} />}
 
+                  {entry.summary && <p className="sec-summary">{entry.summary}</p>}
+
                   {entry.bullets && entry.bullets.length > 0 && (
                     singleBullet ? (
                       <p className="sec-desc">{entry.bullets[0]}</p>

@@ -34,7 +34,9 @@
   --fs-role: 20px;            /* role / sub-line */
   --fs-label: 16px;           /* section label + nav */
 
-  --lh-hero: 1.05;          /* >1 so the reveal mask does not crop j/y descenders */
+  --lh-hero: 1.28;          /* full ascender-to-descender headroom: the reveal
+                               mask clips to the line box, so anything tighter
+                               shaves the top of R/V and the tails of j/y */
   --lh-body: 1.4;
   --ls-hero: -0.05em;         /* -4px at 80px */
   --ls-label: 0.06em;

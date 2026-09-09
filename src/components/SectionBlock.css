@@ -190,6 +190,16 @@
   line-height: var(--lh-body);
 }
 
+/* The plain-language "what is this" line, ahead of the detail bullets. */
+.sec-summary {
+  margin: 0 0 18px;
+  max-width: 720px;
+  font-size: var(--fs-lede);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
+  color: var(--fg);
+}
+
 .sec-bullets {
   margin: 14px 0 0;
   padding-left: 24px;

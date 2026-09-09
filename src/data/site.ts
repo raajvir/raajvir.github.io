@@ -24,6 +24,8 @@ export type Entry = {
   location?: string;
   date: string;
   bullets?: string[];
+  /** Plain-language answer to "what is this?", read before the bullets. */
+  summary?: string;
   /** Pulled out as an oversized quote — the single best line of the entry. */
   pullQuote?: string;
   /** Count-up tiles rendered above the bullets. */
@@ -98,6 +100,8 @@ export const sections: Section[] = [
     entries: [
       {
         id: "nfr",
+        summary:
+          "Northwestern's student motorsport team — we design, build and race a single-seater car every season. I run the operations side of it.",
         href: "https://www.northwesternformularacing.com/",
         image: "/assets/activities/nfr.jpg",
         title: "Northwestern Formula Racing",
@@ -115,6 +119,8 @@ export const sections: Section[] = [
       },
       {
         id: "f1-atr",
+        summary:
+          "Formula 1 caps how much aerodynamic testing each team is allowed. This study asks whether that cap actually changes who ends up fastest.",
         image: "/assets/activities/f1-atr.svg",
         title: "f1-atr",
         role: "Independent Research — F1 Aerodynamic Testing Restrictions",
@@ -134,6 +140,8 @@ export const sections: Section[] = [
       },
       {
         id: "six-cylinders",
+        summary:
+          "A weekly show where the two of us break down the money and strategy behind Formula 1, rather than just the racing.",
         image: "/assets/activities/six-cylinders.jpg",
         title: "Six Cylinders F1 Podcast",
         role: "Co-Host",
@@ -157,6 +165,8 @@ export const sections: Section[] = [
     entries: [
       {
         id: "kaizen",
+        summary:
+          "An analytics consultancy. I built the pricing software that decides what a second-hand item should sell for, across a national US thrift chain.",
         href: "https://www.kaizenanalytix.com/",
         image: "/assets/activities/kaizen.jpg",
         title: "Kaizen Analytix",
@@ -175,6 +185,8 @@ export const sections: Section[] = [
       },
       {
         id: "isvaryam",
+        summary:
+          "A cold-press cooking oil producer. I worked out how to get more oil out of the same seeds by changing the timing of the production run.",
         href: "https://www.isvaryam.com/",
         image: "/assets/activities/isvaryam.jpg",
         title: "Isvaryam Organic Cooking Oils",
@@ -189,6 +201,8 @@ export const sections: Section[] = [
       },
       {
         id: "toyota",
+        summary:
+          "A Toyota dealership. I sold new cars to customers on the showroom floor.",
         href: "https://anaamalaistoyota.com/",
         image: "/assets/activities/toyota.jpg",
         title: "Anaamalais Toyota",
@@ -211,8 +225,10 @@ export const sections: Section[] = [
     entries: [
       {
         id: "somnia",
+        summary:
+          "A sleep app for people with insomnia. A wristband reads your heartbeat and the app adapts in real time to help you fall asleep.",
         href: "https://projectsomnia.com",
-        image: "/assets/activities/somnia.jpg",
+        image: "/assets/activities/somnia.svg",
         title: "Somnia",
         org: "Sleep-tech Startup — Northwestern Garage",
         role: "Founder & CEO",
@@ -231,6 +247,8 @@ export const sections: Section[] = [
       },
       {
         id: "airline",
+        summary:
+          "Working out the most profitable way to split a long-haul cabin between business, premium economy and economy seats.",
         image: "/assets/activities/airline.svg",
         title: "Airline Cabin Revenue Optimisation",
         org: "ANA Boeing 787-9, Tokyo-Los Angeles",
@@ -246,7 +264,9 @@ export const sections: Section[] = [
       },
       {
         id: "alphabeta",
-        image: "/assets/activities/alphabeta.jpg",
+        summary:
+          "A machine-learning model that estimates how risky an investment portfolio is before you put money into it.",
+        image: "/assets/activities/alphabeta.svg",
         title: "Alpha Beta Investments",
         org: "New York",
         role: "Student Researcher",
@@ -260,8 +280,10 @@ export const sections: Section[] = [
       },
       {
         id: "netflix",
+        summary:
+          "Testing whether Netflix's share price actually moves when it releases new shows, or whether that link is imagined.",
         href: "https://www.researchgate.net/publication/388502227_How_do_Media_Releases_Affect_Netflix's_Stock",
-        image: "/assets/activities/netflix.jpg",
+        image: "/assets/activities/netflix.svg",
         title: "Netflix Releases & Stock Price Volatility",
         role: "Research Author",
         date: "2022 - 2023",
@@ -274,6 +296,8 @@ export const sections: Section[] = [
       },
       {
         id: "sura",
+        summary:
+          "A five-year study on how students see themselves and which opportunities they take. I built the data models underneath it.",
         href: "https://adamlab.sesp.northwestern.edu/project-overview/",
         image: "/assets/activities/sura.svg",
         title: "IPR SURA Grant",
@@ -288,6 +312,8 @@ export const sections: Section[] = [
       },
       {
         id: "polymarket",
+        summary:
+          "A prediction market where people bet on real-world events. I researched where new users get stuck and redesigned that flow.",
         href: "https://polymarket.com/",
         image: "/assets/activities/polymarket.svg",
         title: "Polymarket",
@@ -308,6 +334,7 @@ export const sections: Section[] = [
     entries: [
       {
         id: "northwestern",
+        image: "/assets/activities/northwestern.jpg",
         href: "https://www.mccormick.northwestern.edu/",
         title: "Northwestern University",
         org: "McCormick School of Engineering",
@@ -319,6 +346,7 @@ export const sections: Section[] = [
       },
       {
         id: "tisb",
+        image: "/assets/activities/tisb.jpg",
         href: "https://tisb.org/",
         title: "The International School Bangalore",
         role: "International Baccalaureate Diploma",
@@ -433,6 +461,6 @@ export const references = {
 };
 
 export const footer = {
-  copy: "© 2026 by Raajvir Vijay. Powered by Mercedes-AMG Powertrains (just kidding.)",
+  copy: "© 2026 Raajvir Vijay. Powered by Mercedes-AMG HPP (jk :D)",
   linkLabel: "Read about me all over again!",
 };

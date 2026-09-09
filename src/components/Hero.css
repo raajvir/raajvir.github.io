@@ -32,6 +32,10 @@
   overflow: hidden;
   vertical-align: top;
   line-height: var(--lh-hero);
+  /* Side bearings: at -0.05em tracking the outermost glyph edges fall
+     outside the advance width and would be shaved by the mask. */
+  padding-inline: 0.04em;
+  margin-inline: -0.04em;
 }
 
 .hero-name__char {
