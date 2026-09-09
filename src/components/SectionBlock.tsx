@@ -17,8 +17,8 @@ import "./SectionBlock.css";
  * rather than rendering nothing.
  */
 /** Card size as a fraction of the row — must match .sec-art in the CSS. */
-const ART_W = 0.4;
-const ART_H = 0.55;
+const ART_W = 0.36;
+const ART_H = 0.64;
 
 const clamp = (v: number, lo: number, hi: number) =>
   Math.min(Math.max(v, lo), hi);

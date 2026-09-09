@@ -212,7 +212,7 @@ export const sections: Section[] = [
       {
         id: "somnia",
         href: "https://projectsomnia.com",
-        image: "/assets/activities/somnia.svg",
+        image: "/assets/activities/somnia.jpg",
         title: "Somnia",
         org: "Sleep-tech Startup — Northwestern Garage",
         role: "Founder & CEO",
@@ -246,7 +246,7 @@ export const sections: Section[] = [
       },
       {
         id: "alphabeta",
-        image: "/assets/activities/alphabeta.svg",
+        image: "/assets/activities/alphabeta.jpg",
         title: "Alpha Beta Investments",
         org: "New York",
         role: "Student Researcher",
@@ -261,7 +261,7 @@ export const sections: Section[] = [
       {
         id: "netflix",
         href: "https://www.researchgate.net/publication/388502227_How_do_Media_Releases_Affect_Netflix's_Stock",
-        image: "/assets/activities/netflix.svg",
+        image: "/assets/activities/netflix.jpg",
         title: "Netflix Releases & Stock Price Volatility",
         role: "Research Author",
         date: "2022 - 2023",
