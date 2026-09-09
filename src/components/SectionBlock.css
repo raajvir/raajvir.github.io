@@ -1,0 +1,313 @@
+.sec {
+  /* background/colour come from .surface (see index.css) — do not set them
+     here, it would break the lit-section inversion transition. */
+  padding-bottom: 56px;
+}
+
+.sec-label {
+  display: block;
+  margin-top: 46px;
+  margin-bottom: 44px;
+}
+
+/* Tighten the label's own margin when a blurb follows, so the two vertical
+   margins collapse to ~10px instead of the label's usual 44px. */
+.sec-label:has(+ .sec-blurb) {
+  margin-bottom: 10px;
+}
+
+.sec-blurb {
+  margin: 0 0 34px;
+  font-size: 20px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+.sec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+/* ---------- entry row ---------- */
+.sec-entry {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.sec-bar {
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 2px;
+  height: 100%;
+  z-index: 1;
+  background: var(--c-accent);
+  transform-origin: top center;
+}
+
+/* ---------- cursor-revealed background art ----------
+   First child of a `.sec-entry--has-art` row, painted behind the text
+   (z-index 0, content above it at z-index 1). Masked to a circle that
+   follows the pointer via --art-x/--art-y (set from a JS pointermove
+   handler); revealed by fading the whole layer's opacity in on hover
+   rather than animating the mask radius. The art is dark line-art, so it
+   reads as a faint texture on a white section and much more visibly once
+   the section inverts to black. */
+.sec-art {
+  /* Timing-tower entries reveal their photo across the WHOLE row on hover —
+     no cursor circle — and the text steps aside while it is showing. */
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.sec-entry--art-active .sec-art {
+  opacity: 1;
+}
+
+/* Text fades out rather than unmounting, so it stays in the accessibility
+   tree and the row keeps its height while the photo is up. */
+.sec-entry--has-art .sec-content,
+.sec-entry--has-art .sec-date {
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.sec-entry--art-active .sec-content,
+.sec-entry--art-active .sec-date {
+  opacity: 0;
+}
+
+/* The photo needs room to read as an image, not a sliver. */
+.sec-entry--has-art {
+  min-height: 260px;
+}
+
+/* Purple is meaningful, not a generic hover colour: only a genuine
+   fastest-lap entry gets a purple bar (from the start) and a purple title
+   on hover. Every other entry hovers red, same as the sector bar default. */
+.sec-entry--fastest .sec-bar {
+  background: var(--c-purple);
+}
+
+.sec-content {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  max-width: 720px;
+}
+
+.sec-title {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  line-height: 1.15;
+  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+
+.sec-entry:hover .sec-title {
+  color: var(--c-accent);
+  transform: translateX(6px);
+}
+
+.sec-entry--fastest:hover .sec-title {
+  color: var(--c-purple);
+}
+
+.sec-title-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: inherit;
+}
+
+.sec-title-arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.sec-title-link:hover .sec-title-arrow {
+  transform: translateX(4px);
+}
+
+.sec-role {
+  margin: 7px 0 0;
+  font-size: var(--fs-role);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.sec-role + .sec-role {
+  margin-top: 4px;
+}
+
+.sec-org {
+  color: var(--fg-dim);
+}
+
+/* ---------- stats ---------- */
+.sec-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin: 24px 0 0;
+}
+
+.sec-stat-value {
+  font-size: 34px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.sec-stat-label {
+  margin-top: 6px;
+  max-width: 140px;
+  font-size: 12px;
+  font-weight: var(--fw-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-dim);
+}
+
+.sec-desc {
+  margin: 30px 0 0;
+  max-width: 720px;
+  font-size: var(--fs-lede);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
+}
+
+.sec-bullets {
+  margin: 14px 0 0;
+  padding-left: 24px;
+  list-style: disc;
+}
+
+.sec-bullets li {
+  font-size: var(--fs-lede);
+  font-weight: var(--fw-light);
+  line-height: 1.5;
+}
+
+.sec-bullets li + li {
+  margin-top: 10px;
+}
+
+/* ---------- pull quote ---------- */
+.sec-pull-quote {
+  margin-top: 24px;
+  max-width: 640px;
+  padding-left: 20px;
+  border-left: 2px solid var(--c-accent);
+}
+
+.sec-pull-quote blockquote {
+  margin: 0;
+  font-size: 24px;
+  font-weight: var(--fw-light);
+  line-height: 1.35;
+  color: var(--fg);
+}
+
+/* ---------- date / location / fastest badge ---------- */
+.sec-date {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.sec-date-top {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.sec-fastest-badge {
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--c-purple);
+}
+
+.sec-location {
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+.sec-location-sep {
+  display: none;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .sec-bar {
+    display: none;
+  }
+
+  .sec-list {
+    gap: 44px;
+  }
+
+  .sec-entry {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .sec-date {
+    order: -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    text-align: left;
+    font-size: 15px;
+  }
+
+  /* On mobile the date sits above the title, so location joins it on the
+     same line, separated by a thin middot, instead of stacking below. */
+  .sec-location-sep {
+    display: inline;
+    margin-right: 6px;
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 600px) {
+  .sec {
+    padding-bottom: 64px;
+  }
+
+  .sec-stats {
+    gap: 24px;
+  }
+
+  .sec-stat-value {
+    font-size: 26px;
+  }
+
+  .sec-stat-label {
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,337 @@
+.proj-section {
+  /* background/colour come from .surface (see index.css) — do not set them
+     here, it would break the lit-section inversion transition. */
+  padding-bottom: 56px;
+}
+
+.proj-label {
+  display: block;
+  margin-top: 46px;
+  margin-bottom: 10px;
+}
+
+.proj-blurb {
+  margin: 0;
+  font-size: 20px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- filter chips ---------- */
+.proj-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 36px;
+}
+
+.proj-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: var(--fw-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.proj-chip:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.proj-chip--active,
+.proj-chip--active:hover {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-white);
+}
+
+.proj-chip-count {
+  position: relative;
+  top: -3px;
+  font-size: 9px;
+  letter-spacing: 0;
+  opacity: 0.55;
+}
+
+/* ---------- grid ---------- */
+.proj-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+@media (min-width: 700px) {
+  .proj-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .proj-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------- card ---------- */
+.proj-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  transition: border-color var(--dur-fast) var(--ease-out), background-color 0.6s var(--ease-in-out);
+}
+
+.proj-card:hover {
+  border-color: var(--c-accent);
+}
+
+.proj-card--fastest:hover {
+  border-color: var(--c-purple);
+}
+
+/* Spotlight follow: painted behind the content, only enabled (via the
+   --spotlight modifier) on fine pointers with motion allowed. */
+.proj-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(221, 38, 11, 0.07), transparent 70%);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.proj-card--spotlight:hover::before {
+  opacity: 1;
+}
+
+/* On a lit (black) card the same 0.07-alpha red reads as almost nothing,
+   so raise it once the ancestor section inverts. */
+.surface.is-lit .proj-card::before {
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(221, 38, 11, 0.14), transparent 70%);
+}
+
+/* ---------- cursor-revealed background art ----------
+   A real DOM layer (not a pseudo-element, so it can carry a per-entry
+   background-image), painted behind .proj-card-body (z-index 0 vs 1) and
+   masked to a circle that follows the pointer via --art-x/--art-y (set by
+   the same handler that drives the spotlight above). Revealed by fading
+   the layer's opacity in on hover. The art is dark line-art: it reads as a
+   faint texture on a white card, and much more visibly once the card's
+   section inverts to black. */
+.proj-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  -webkit-mask-image: radial-gradient(
+    circle var(--art-r, 170px) at var(--art-x, 50%) var(--art-y, 50%),
+    #000 0%,
+    #000 82%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle var(--art-r, 170px) at var(--art-x, 50%) var(--art-y, 50%),
+    #000 0%,
+    #000 82%,
+    transparent 100%
+  );
+  transition: opacity var(--dur-mid) var(--ease-out);
+}
+
+.proj-card--spotlight:hover .proj-art {
+  opacity: 0.12;
+}
+
+.surface.is-lit .proj-card--spotlight:hover .proj-art {
+  opacity: 0.6;
+}
+
+.proj-card-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: 28px;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- link arrow (only when entry.href exists) ---------- */
+.proj-arrow {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--fg-dim);
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.proj-card:hover .proj-arrow {
+  transform: translate(3px, -3px);
+  color: var(--c-accent);
+}
+
+.proj-card--fastest:hover .proj-arrow {
+  color: var(--c-purple);
+}
+
+/* ---------- top row: date + fastest badge ---------- */
+.proj-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-right: 22px; /* keep clear of the link arrow */
+}
+
+.proj-date {
+  font-size: 13px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+.proj-fastest-badge {
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--c-purple);
+  white-space: nowrap;
+}
+
+/* ---------- title ---------- */
+.proj-title {
+  margin: 14px 0 0;
+  font-size: 24px;
+  font-weight: var(--fw-light);
+  line-height: 1.2;
+  color: var(--fg);
+  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+
+.proj-card:hover .proj-title {
+  color: var(--c-accent);
+  transform: translateX(4px);
+}
+
+.proj-card--fastest:hover .proj-title {
+  color: var(--c-purple);
+}
+
+/* ---------- role / org ---------- */
+.proj-meta {
+  margin-top: 8px;
+}
+
+.proj-role {
+  margin: 0;
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.proj-org {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- stats ---------- */
+.proj-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 18px;
+}
+
+.proj-stat-value {
+  font-size: 22px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.proj-stat-label {
+  margin-top: 4px;
+  max-width: 130px;
+  font-size: 10px;
+  font-weight: var(--fw-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-dim);
+}
+
+/* ---------- bottom slot: pull quote or first bullet ---------- */
+.proj-bottom {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.proj-bullet {
+  margin: 0;
+  font-size: 16px;
+  font-weight: var(--fw-light);
+  line-height: 1.45;
+  color: var(--fg);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.proj-quote {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--c-accent);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: var(--fw-light);
+  line-height: 1.45;
+  color: var(--fg);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 480px) {
+  .proj-card-body {
+    padding: 20px;
+  }
+
+  .proj-arrow {
+    top: 20px;
+    right: 20px;
+  }
+
+  .proj-title {
+    font-size: 21px;
+  }
+}

@@ -1,0 +1,32 @@
+.flap {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.flap-space { display: inline-block; width: 0.32em; }
+
+.flap-cell {
+  display: inline-block;
+  text-align: center;
+  vertical-align: baseline;
+}
+
+/* Only digits get a fixed cell. Letters keep their natural width — forcing a
+   proportional face into 1ch crushes wide glyphs like "m" and "S". */
+.flap-cell--digit {
+  width: 1ch;
+}
+
+.flap-face {
+  display: inline-block;
+  animation: flap-turn 90ms var(--ease-out);
+}
+
+/* Once locked the character stops re-keying, so the animation stops with it. */
+.flap-cell.is-locked .flap-face { animation: none; }
+
+@keyframes flap-turn {
+  from { transform: scaleY(0.4); opacity: 0.55; }
+  to   { transform: scaleY(1);   opacity: 1; }
+}

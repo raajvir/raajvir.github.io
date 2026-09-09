@@ -1,0 +1,219 @@
+.contact {
+  padding-bottom: 100px;
+}
+
+.contact-label {
+  display: block;
+  margin-top: 44px;
+}
+
+/* ---------- layout ---------- */
+.contact-grid {
+  margin-top: 53px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.contact-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  min-width: 0;
+}
+
+/* ---------- phone / email / location ---------- */
+.contact-block-email,
+.contact-block-location {
+  margin-top: 6px;
+}
+
+.contact-heading {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.contact-values {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-copyable {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  line-height: 25px;
+}
+
+.contact-value {
+  font-size: var(--fs-role);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  transition: color var(--dur-fast) ease var(--ease-out);
+}
+
+.contact-value-link:hover,
+.contact-value-link:focus-visible {
+  color: var(--c-accent);
+}
+
+@media (pointer: fine) {
+  .contact-value-link {
+    cursor: copy;
+  }
+}
+
+.contact-copied-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact-copied-badge.is-visible {
+  animation: contact-copy-fade 1.6s ease;
+}
+
+.contact-copied-badge.is-static {
+  opacity: 1;
+}
+
+@keyframes contact-copy-fade {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- socials ---------- */
+.contact-socials-wrap {
+  margin-top: 30px;
+}
+
+.contact-socials {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-social-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  color: var(--fg);
+  transition: color var(--dur-fast) ease var(--ease-out), transform var(--dur-fast) ease var(--ease-out);
+}
+
+.contact-social-link:hover,
+.contact-social-link:focus-visible {
+  color: var(--c-accent);
+  transform: scale(1.15);
+}
+
+.contact-social-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  border: 1px solid var(--c-accent);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--dur-fast) ease var(--ease-out), transform var(--dur-fast) ease var(--ease-out);
+  pointer-events: none;
+}
+
+.contact-social-link:hover .contact-social-ring,
+.contact-social-link:focus-visible .contact-social-ring {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- paddock clock ---------- */
+.contact-clock {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  padding-top: 4px;
+}
+
+.contact-clock-rule {
+  width: 1px;
+  align-self: stretch;
+  background: var(--line);
+  transition: background-color 0.6s var(--ease-in-out);
+}
+
+.contact-clock-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-clock-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.contact-clock-label {
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--fg-dim);
+}
+
+.contact-clock-time {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.contact-clock-time--pulse {
+  animation: contact-clock-pulse 1s steps(2, end) infinite;
+}
+
+@keyframes contact-clock-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .contact-grid {
+    flex-direction: column;
+    margin-top: 52px;
+  }
+
+  .contact-clock {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact {
+    padding-bottom: 80px;
+  }
+}

@@ -1,0 +1,132 @@
+.skills-sec {
+  padding-bottom: 56px;
+  overflow-x: hidden;
+}
+
+.skills-label {
+  display: block;
+  margin-top: 46px;
+  margin-bottom: 46px;
+}
+
+/* ---------- rows ---------- */
+.skills-rows {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.skills-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 0;
+}
+
+.skills-row:not(:last-child) {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.skills-row-label {
+  flex: 0 0 auto;
+  padding-left: var(--gutter);
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+/* ---------- track ---------- */
+.skills-track-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.skills-track {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  width: max-content;
+  will-change: transform;
+  animation-name: skills-scroll;
+  animation-duration: var(--skills-duration, 40s);
+  animation-direction: var(--skills-direction, normal);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.skills-row:hover .skills-track,
+.skills-row:focus-within .skills-track {
+  animation-play-state: paused;
+}
+
+@keyframes skills-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.skills-chip {
+  position: relative;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.skills-chip:hover {
+  color: var(--c-accent);
+}
+
+.skills-chip:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  width: 1px;
+  height: 14px;
+  transform: translateY(-50%);
+  background: var(--line);
+}
+
+/* ---------- reduced motion: static wrapping row ---------- */
+.skills-track-wrap--static {
+  overflow: visible;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+.skills-track--static {
+  flex-wrap: wrap;
+  width: auto;
+  will-change: auto;
+  animation: none;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .skills-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .skills-row-label {
+    padding-left: var(--gutter);
+  }
+
+  .skills-track-wrap,
+  .skills-track-wrap--static {
+    width: 100%;
+  }
+}

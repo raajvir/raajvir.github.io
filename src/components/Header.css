@@ -1,0 +1,277 @@
+.hdr {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  height: var(--header-h);
+  background: var(--c-black);
+  border-bottom: 1px solid transparent;
+  transition: height 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+}
+
+.hdr--shrunk {
+  height: 68px;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.hdr-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* ---------- logo ---------- */
+.hdr-logo-link {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.hdr-logo {
+  /* Must stay inside the header box, which shrinks on scroll — a taller
+     logo gets clipped by the header's bottom edge. */
+  height: 84px;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  transition: height var(--dur-fast) var(--ease-out);
+}
+
+.hdr--shrunk .hdr-logo {
+  height: 56px;
+}
+
+@media (max-width: 600px) {
+  .hdr-logo {
+    height: 54px;
+  }
+}
+
+/* ---------- right cluster ---------- */
+.hdr-right {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  min-width: 0;
+}
+
+/* ---------- gear indicator ---------- */
+.hdr-gear {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+  font-family: var(--font-mono);
+}
+
+.hdr-gear-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: 4px;
+}
+
+.hdr-gear-num {
+  font-size: 18px;
+  color: var(--c-white);
+}
+
+/* ---------- nav ---------- */
+.hdr-nav {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.hdr-navlink {
+  position: relative;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-regular);
+  color: var(--c-white);
+  padding-bottom: 6px;
+  white-space: nowrap;
+}
+
+.hdr-navlink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--c-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.hdr-navlink:hover::after,
+.hdr-navlink:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- DRS / download cv button ---------- */
+.hdr-cv {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  color: var(--c-white);
+  background: var(--c-accent);
+  padding: 14px 24px;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.hdr-cv:hover,
+.hdr-cv:focus-visible {
+  background: var(--c-accent-hot);
+}
+
+.hdr-cv::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -30%;
+  width: 24%;
+  height: 220%;
+  background: rgba(255, 255, 255, 0.55);
+  transform: skewX(-20deg) translateX(-350%);
+  pointer-events: none;
+}
+
+.hdr-cv:hover::after,
+.hdr-cv:focus-visible::after {
+  animation: hdr-sheen 0.5s var(--ease-out);
+}
+
+@keyframes hdr-sheen {
+  from {
+    transform: skewX(-20deg) translateX(-350%);
+  }
+  to {
+    transform: skewX(-20deg) translateX(650%);
+  }
+}
+
+/* ---------- throttle / scroll progress bar ---------- */
+.hdr-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--c-accent);
+  transform-origin: left center;
+  box-shadow: 0 0 10px 1px var(--c-accent), 0 0 3px var(--c-accent);
+  pointer-events: none;
+}
+
+/* ---------- hamburger ---------- */
+.hdr-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 60;
+}
+
+.hdr-burger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--c-white);
+  transition: transform 0.3s var(--ease-out), opacity 0.2s var(--ease-out);
+}
+
+.hdr-burger.is-open span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hdr-burger.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hdr-burger.is-open span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ---------- mobile overlay ---------- */
+.hdr-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: var(--c-black);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  padding: var(--gutter);
+}
+
+.hdr-overlay-close {
+  position: absolute;
+  top: 20px;
+  right: var(--gutter);
+  width: 32px;
+  height: 32px;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--c-white);
+}
+
+.hdr-overlay-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hdr-overlay-link {
+  font-family: var(--font-sans);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-regular);
+  color: var(--c-white);
+}
+
+.hdr-cv--overlay {
+  align-self: flex-start;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .hdr-nav,
+  .hdr-gear {
+    display: none;
+  }
+
+  .hdr-burger {
+    display: flex;
+  }
+
+  .hdr-right {
+    gap: 20px;
+  }
+}
+
+@media (min-width: 901px) {
+  .hdr-overlay {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .hdr-cv--bar {
+    display: none;
+  }
+}

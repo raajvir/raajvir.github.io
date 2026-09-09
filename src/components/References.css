@@ -1,0 +1,68 @@
+.refs {
+  padding-bottom: 56px;
+}
+
+.refs-label {
+  display: block;
+  margin-top: 44px;
+}
+
+.refs-note {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+  max-width: 46em;
+}
+
+/* ---------- grid ---------- */
+.refs-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.refs-item {
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.refs-relation {
+  display: block;
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--c-accent);
+}
+
+.refs-name {
+  display: block;
+  margin-top: 8px;
+  font-size: var(--fs-role);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.refs-role {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  line-height: 1.4;
+  color: var(--fg-dim);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .refs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .refs {
+    padding-bottom: 44px;
+  }
+}

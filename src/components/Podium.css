@@ -1,0 +1,284 @@
+.podium-sec {
+  padding-bottom: 56px;
+}
+
+.podium-label {
+  display: block;
+  margin-top: 46px;
+  margin-bottom: 46px;
+}
+
+/* ---------- podium ---------- */
+.podium-list {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+.podium-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: clamp(140px, 22vw, 240px);
+  max-width: 240px;
+}
+
+.podium-col--p1 {
+  order: 2;
+}
+.podium-col--p2 {
+  order: 1;
+}
+.podium-col--p3 {
+  order: 3;
+}
+
+.podium-copy {
+  text-align: center;
+}
+
+.podium-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+
+.podium-detail {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* Redundant with the in-block date on desktop (where the block is visible);
+   shown only in the stacked mobile layout, where the block is hidden. */
+.podium-date--mobile {
+  display: none;
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+.podium-block {
+  width: 100%;
+  background: var(--c-black);
+  color: var(--c-white);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 24px;
+  padding-bottom: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  will-change: height;
+  transition: background-color 0.6s var(--ease-in-out), outline-color 0.6s var(--ease-in-out);
+}
+
+.podium-col--p1 .podium-block {
+  outline: 1px solid var(--c-accent);
+  outline-offset: 4px;
+}
+
+/* When the section itself inverts to black, a solid-black block would
+   vanish into the surface — raise it off the background instead and give
+   it a hairline outline so its edges (and the P1 accent outline) stay
+   legible. Numerals stay white/red since they already read fine on the
+   raised tone. */
+.surface.is-lit .podium-block {
+  background: rgba(255, 255, 255, 0.07);
+  outline: 1px solid var(--line);
+  outline-offset: -1px;
+}
+
+.surface.is-lit .podium-col--p1 .podium-block {
+  outline: 1px solid var(--c-accent);
+  outline-offset: 4px;
+}
+
+.podium-num {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 2px;
+  line-height: 1;
+}
+
+.podium-num-p {
+  font-size: 22px;
+  font-weight: var(--fw-light);
+  color: var(--c-white);
+}
+
+.podium-num-n {
+  font-size: 68px;
+  font-weight: var(--fw-light);
+  color: var(--c-white);
+  line-height: 1;
+}
+
+.podium-col--p1 .podium-num-n {
+  font-size: 88px;
+}
+
+.podium-col--p1 .podium-num-p,
+.podium-col--p1 .podium-num-n {
+  color: var(--c-accent);
+}
+
+.podium-block-date {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 12px;
+  font-weight: var(--fw-light);
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.podium-floor {
+  height: 2px;
+  width: 100%;
+  background: var(--c-accent);
+}
+
+.podium-mobile-marker {
+  display: none;
+}
+
+/* ---------- also classified ---------- */
+.podium-also {
+  margin-top: 40px;
+}
+
+.podium-also-heading {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--fg-dim);
+}
+
+.podium-also-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.podium-also-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.podium-also-bullet {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  background: var(--c-accent);
+}
+
+.podium-also-title {
+  font-size: 16px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.podium-also-detail {
+  font-size: 14px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+.podium-also-date {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+/* ---------- responsive: stacked list below 700px ---------- */
+@media (max-width: 700px) {
+  .podium-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+    margin-top: 4px;
+  }
+
+  .podium-col--p1,
+  .podium-col--p2,
+  .podium-col--p3 {
+    order: 0;
+  }
+
+  .podium-col {
+    width: auto;
+    max-width: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .podium-copy {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .podium-title {
+    font-size: 16px;
+  }
+
+  .podium-date--mobile {
+    display: block;
+  }
+
+  .podium-block {
+    display: none;
+  }
+
+  .podium-mobile-marker {
+    display: block;
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    background: var(--fg);
+    transition: background-color 0.6s var(--ease-in-out);
+  }
+
+  .podium-col--p1 .podium-mobile-marker {
+    background: var(--c-accent);
+  }
+
+  .podium-floor {
+    display: none;
+  }
+
+  .podium-also {
+    margin-top: 30px;
+  }
+
+  .podium-also-date {
+    margin-left: 0;
+    flex: 1 0 100%;
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .podium-sec {
+    padding-bottom: 64px;
+  }
+}

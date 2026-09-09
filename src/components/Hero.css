@@ -1,0 +1,353 @@
+.hero {
+  position: relative;
+  background: var(--c-black);
+  overflow: hidden;
+}
+
+.hero-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* ---------- left column ---------- */
+
+.hero-left {
+  margin-top: 309px;
+  min-width: 0;
+}
+
+.hero-name {
+  margin: 0;
+  font-size: var(--fs-hero);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--ls-hero);
+  line-height: var(--lh-hero);
+  color: var(--c-white);
+}
+
+.hero-name__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: var(--lh-hero);
+}
+
+.hero-name__char {
+  display: inline-block;
+  will-change: transform;
+}
+
+.hero-contact {
+  margin-top: 42px;
+  color: var(--c-white);
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.hero-contact p {
+  margin: 0;
+}
+
+.hero-contact__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+}
+
+.hero-contact__dot {
+  opacity: 0.4;
+}
+
+.hero-contact a {
+  font-weight: var(--fw-light);
+  color: var(--c-white);
+}
+
+.hero-contact a:hover,
+.hero-contact a:focus-visible {
+  text-decoration: underline;
+}
+
+/* ---------- status ticker ---------- */
+
+.hero-status {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.hero-status__bullet {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--c-accent);
+}
+
+.hero-status__text-wrap {
+  position: relative;
+  display: inline-flex;
+  min-height: 1.4em;
+  align-items: center;
+}
+
+.hero-status__text {
+  display: inline-block;
+}
+
+.hero-socials {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-socials__link {
+  display: inline-flex;
+  color: var(--c-white);
+  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+
+.hero-socials__link:hover,
+.hero-socials__link:focus-visible {
+  color: var(--c-accent);
+  transform: scale(1.12);
+}
+
+.hero-lede {
+  margin-top: 151px;
+  max-width: 560px;
+  font-size: var(--fs-lede);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
+  color: var(--c-white);
+}
+
+/* ---------- right column: portrait + helmet ---------- */
+
+.hero-portrait {
+  position: relative;
+  flex-shrink: 0;
+  margin: 210px 0 0;
+  width: 396px;
+  height: 810px;
+  cursor: pointer;
+}
+
+.hero-portrait:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 6px;
+}
+
+.hero-portrait__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/*
+ * Full-figure-sized mask wrapper: its box matches the figure's own box, which
+ * is the coordinate space --spot-x/--spot-y are measured in. The mask hides
+ * this wrapper's contents (the helmet) inside the spotlight circle and keeps
+ * them visible outside it, revealing the portrait underneath.
+ */
+.hero-portrait__helmet-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(
+    circle var(--spot-r) at var(--spot-x) var(--spot-y),
+    transparent 0%,
+    transparent 88%,
+    #000 100%
+  );
+  mask-image: radial-gradient(
+    circle var(--spot-r) at var(--spot-x) var(--spot-y),
+    transparent 0%,
+    transparent 88%,
+    #000 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.hero-portrait__helmet {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -94px;
+  width: 188px;
+  height: 161px;
+  pointer-events: none;
+  display: block;
+}
+
+/*
+ * A hairline ring exactly at the reveal boundary — just enough to sell the
+ * cut edge without washing out the face like the old soft beam glow did.
+ */
+.hero-portrait__beam {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(
+    circle var(--spot-r) at var(--spot-x) var(--spot-y),
+    transparent 0%,
+    transparent 97%,
+    rgba(255, 255, 255, 0.25) 99%,
+    transparent 101%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-portrait {
+    cursor: default;
+  }
+}
+
+/* ---------- scroll cue ---------- */
+
+.hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-scroll__label {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.hero-scroll__line {
+  position: relative;
+  width: 1px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+}
+
+.hero-scroll__seg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 14px;
+  background: var(--c-accent-hot);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1024px) {
+  .hero-left {
+    margin-top: 220px;
+  }
+  .hero-lede {
+    margin-top: 130px;
+  }
+  .hero-portrait {
+    margin-top: 150px;
+    width: 300px;
+    height: 614px;
+  }
+  .hero-portrait__helmet {
+    width: 150px;
+    height: 129px;
+    margin-left: -75px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-container {
+    flex-direction: column;
+    align-items: center;
+    /* Text stays left-aligned as on the original site; only the portrait centres. */
+    text-align: left;
+  }
+  .hero-left {
+    margin-top: 48px;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .hero-name {
+    order: 1;
+  }
+  .hero-contact {
+    order: 2;
+    margin-top: 32px;
+  }
+  .hero-socials {
+    order: 3;
+    margin-top: 16px;
+    justify-content: flex-start;
+  }
+  .hero-status-block {
+    order: 4;
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .hero-lede {
+    order: 5;
+    margin-top: 20px;
+    max-width: 480px;
+  }
+  .hero-portrait {
+    order: 1;
+    align-self: center;
+    margin-top: 40px;
+    width: 280px;
+    height: 573px;
+  }
+  .hero-portrait__helmet {
+    width: 132px;
+    height: 113px;
+    margin-left: -66px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding-bottom: 90px;
+  }
+  .hero-portrait {
+    width: 200px;
+    height: 409px;
+  }
+  .hero-portrait__helmet {
+    width: 94px;
+    height: 81px;
+    margin-left: -47px;
+    top: -4px;
+  }
+  .hero-lede {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-left {
+    margin-top: 32px;
+  }
+}
