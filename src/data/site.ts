@@ -98,6 +98,7 @@ export const sections: Section[] = [
     entries: [
       {
         id: "nfr",
+        href: "https://www.northwesternformularacing.com/",
         image: "/assets/activities/nfr.jpg",
         title: "Northwestern Formula Racing",
         role: "Operations Lead",
@@ -156,6 +157,7 @@ export const sections: Section[] = [
     entries: [
       {
         id: "kaizen",
+        href: "https://www.kaizenanalytix.com/",
         image: "/assets/activities/kaizen.jpg",
         title: "Kaizen Analytix",
         role: "Data Science & Consulting Intern",
@@ -173,6 +175,7 @@ export const sections: Section[] = [
       },
       {
         id: "isvaryam",
+        href: "https://www.isvaryam.com/",
         image: "/assets/activities/isvaryam.jpg",
         title: "Isvaryam Organic Cooking Oils",
         role: "Operations Intern",
@@ -186,6 +189,7 @@ export const sections: Section[] = [
       },
       {
         id: "toyota",
+        href: "https://anaamalaistoyota.com/",
         image: "/assets/activities/toyota.jpg",
         title: "Anaamalais Toyota",
         role: "Salesman",
@@ -281,6 +285,7 @@ export const sections: Section[] = [
       },
       {
         id: "polymarket",
+        href: "https://polymarket.com/",
         image: "/assets/activities/polymarket.svg",
         title: "Polymarket",
         org: "via Ascend Consulting Group",
@@ -300,6 +305,7 @@ export const sections: Section[] = [
     entries: [
       {
         id: "northwestern",
+        href: "https://www.mccormick.northwestern.edu/",
         title: "Northwestern University",
         org: "McCormick School of Engineering",
         role: "BSc Industrial Engineering & Management Sciences",
@@ -310,6 +316,7 @@ export const sections: Section[] = [
       },
       {
         id: "tisb",
+        href: "https://tisb.org/",
         title: "The International School Bangalore",
         role: "International Baccalaureate Diploma",
         location: "Bengaluru, India",

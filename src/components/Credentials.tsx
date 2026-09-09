@@ -53,7 +53,23 @@ export function Credentials({ section }: { section: Section }) {
 
                 <div className="cred-head">
                   <div className="cred-heading">
-                    <h3 className="cred-title">{entry.title}</h3>
+                    <h3 className="cred-title">
+                      {entry.href ? (
+                        <a
+                          className="cred-title-link"
+                          href={entry.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {entry.title}
+                          <span className="cred-title-arrow" aria-hidden="true">
+                            ↗
+                          </span>
+                        </a>
+                      ) : (
+                        entry.title
+                      )}
+                    </h3>
                     {entry.org && <p className="cred-org">{entry.org}</p>}
                     {entry.role && <p className="cred-role">{entry.role}</p>}
                     {entry.location && <p className="cred-location">{entry.location}</p>}
