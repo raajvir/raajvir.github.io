@@ -454,7 +454,7 @@ export const references = {
   label: "REFERENCES",
   note: "Contact details on request, or on the CV.",
   entries: [
-    { id: "puppa", name: "Andreas Puppa", role: "VP, Data Science, Kaizen Analytix", relation: "Supervisor" },
+    { id: "puppa", name: "Andreas Puppa", role: "VP, Data Science, Kaizen Analytix", relation: "Former Employer" },
     { id: "gatchell", name: "Prof. David Gatchell", role: "Director, Manufacturing & Design Engineering, Northwestern", relation: "Professor" },
     { id: "vainora", name: "Prof. Julius Vainora", role: "Associate Professor of Economics, University of Cambridge", relation: "Research Supervisor" },
   ],
