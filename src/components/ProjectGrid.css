@@ -142,7 +142,11 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background-size: cover;
+  /* `contain` so each image keeps its own aspect ratio rather than being
+     cropped to the card; the circular mask means the letterboxing never
+     reads as empty bars. */
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: center;
   opacity: 0;
   -webkit-mask-image: radial-gradient(

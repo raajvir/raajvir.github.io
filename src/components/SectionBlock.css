@@ -60,13 +60,13 @@
   left: 0;
   top: 0;
   z-index: 3;
-  width: 36%;
-  height: 64%;
+  /* Bounded on both axes but sized by the image itself, so every picture
+     keeps its own aspect ratio instead of being cropped to the card. */
+  width: auto;
+  height: auto;
+  max-width: 36%;
+  max-height: 250px;
   pointer-events: none;
-  background-size: cover;
-  /* Real photos are portrait-ish; biasing the crop above centre keeps faces
-     and subjects in frame inside a landscape card. */
-  background-position: center 34%;
   border: 1px solid var(--line);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   opacity: 0;

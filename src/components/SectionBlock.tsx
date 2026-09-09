@@ -16,10 +16,6 @@ import "./SectionBlock.css";
  * the start. Any other section `kind` still falls back to this layout
  * rather than rendering nothing.
  */
-/** Card size as a fraction of the row — must match .sec-art in the CSS. */
-const ART_W = 0.36;
-const ART_H = 0.64;
-
 const clamp = (v: number, lo: number, hi: number) =>
   Math.min(Math.max(v, lo), hi);
 
@@ -63,11 +59,12 @@ export function SectionBlock({ section }: { section: Section }) {
         activeArtRef.current = entry;
       }
 
-      // Keep the card fully inside the row: clamp the centre by half the
-      // card's size. These fractions mirror the width/height in the CSS.
+      // Keep the card fully inside the row. The card keeps each image's own
+      // aspect ratio, so its size has to be measured rather than assumed.
       const rect = entry.getBoundingClientRect();
-      const halfW = (rect.width * ART_W) / 2;
-      const halfH = (rect.height * ART_H) / 2;
+      const art = entry.querySelector<HTMLElement>(".sec-art");
+      const halfW = (art?.offsetWidth ?? 0) / 2;
+      const halfH = (art?.offsetHeight ?? 0) / 2;
       const x = clamp(event.clientX - rect.left, halfW, rect.width - halfW);
       const y = clamp(event.clientY - rect.top, halfH, rect.height - halfH);
       entry.style.setProperty("--art-x", `${x}px`);
@@ -104,11 +101,7 @@ export function SectionBlock({ section }: { section: Section }) {
             return (
               <Reveal as="li" index={i} key={entry.id} className={entryClassName}>
                 {hasArt && (
-                  <div
-                    className="sec-art"
-                    aria-hidden="true"
-                    style={{ backgroundImage: `url(${entry.image})` }}
-                  />
+                  <img className="sec-art" src={entry.image} alt="" aria-hidden="true" />
                 )}
                 <motion.span
                   className="sec-bar"

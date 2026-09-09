@@ -115,7 +115,7 @@ export const sections: Section[] = [
       },
       {
         id: "f1-atr",
-        image: "/assets/activities/f1-atr.jpg",
+        image: "/assets/activities/f1-atr.svg",
         title: "f1-atr",
         role: "Independent Research — F1 Aerodynamic Testing Restrictions",
         date: "2026",
