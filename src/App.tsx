@@ -3,6 +3,8 @@ import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { SectionBlock } from "./components/SectionBlock";
 import { ProjectGrid } from "./components/ProjectGrid";
+import { Feature } from "./components/Feature";
+import { ResearchList } from "./components/ResearchList";
 import { Credentials } from "./components/Credentials";
 import { SkillsMarquee } from "./components/SkillsMarquee";
 import { Podium } from "./components/Podium";
@@ -22,6 +24,10 @@ function renderSection(section: Section) {
   switch (section.kind) {
     case "grid":
       return <ProjectGrid key={section.id} section={section} />;
+    case "feature":
+      return <Feature key={section.id} section={section} />;
+    case "papers":
+      return <ResearchList key={section.id} section={section} />;
     case "credentials":
       return <Credentials key={section.id} section={section} />;
     default:

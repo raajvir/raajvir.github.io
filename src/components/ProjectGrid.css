@@ -145,7 +145,7 @@
    reads as a smudge on a white card. At full strength it reads as a lens
    cut through the card. */
 .proj-card--spotlight:hover .proj-art {
-  opacity: 0.92;
+  opacity: 0.8;
 }
 
 .proj-card-body {

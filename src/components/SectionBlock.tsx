@@ -159,26 +159,38 @@ export function SectionBlock({ section }: { section: Section }) {
 
                 <div className="sec-content">
                   <div className="sec-heading">
-                    {entry.logo && (
-                      <img className="sec-logo" src={entry.logo} alt="" aria-hidden="true" />
-                    )}
-                    {entry.href ? (
-                      <h3 className="sec-title">
+                    {/* A company with a logo is identified by the mark alone;
+                        the name stays in the heading for screen readers. */}
+                    <h3 className={`sec-title${entry.logo ? " sec-title--logo" : ""}`}>
+                      {entry.href ? (
                         <a
                           className="sec-title-link"
                           href={entry.href}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {entry.title}
-                          <span className="sec-title-arrow" aria-hidden="true">
-                            &rarr;
-                          </span>
+                          {entry.logo ? (
+                            <>
+                              <img className="sec-logo" src={entry.logo} alt={entry.title} />
+                              <span className="sec-title-arrow" aria-hidden="true">
+                                &rarr;
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              {entry.title}
+                              <span className="sec-title-arrow" aria-hidden="true">
+                                &rarr;
+                              </span>
+                            </>
+                          )}
                         </a>
-                      </h3>
-                    ) : (
-                      <h3 className="sec-title">{entry.title}</h3>
-                    )}
+                      ) : entry.logo ? (
+                        <img className="sec-logo" src={entry.logo} alt={entry.title} />
+                      ) : (
+                        entry.title
+                      )}
+                    </h3>
                   </div>
 
                   {entry.role && <p className="sec-role">{entry.role}</p>}
@@ -198,6 +210,19 @@ export function SectionBlock({ section }: { section: Section }) {
                         ))}
                       </ul>
                     )
+                  )}
+
+                  {entry.extraLinks && entry.extraLinks.length > 0 && (
+                    <ul className="sec-links">
+                      {entry.extraLinks.map((link) => (
+                        <li key={link.href}>
+                          <a href={link.href} target="_blank" rel="noopener noreferrer">
+                            {link.label}
+                            <span aria-hidden="true"> &rarr;</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   )}
 
                   {entry.pullQuote && (

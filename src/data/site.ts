@@ -36,12 +36,18 @@ export type Entry = {
   tags?: string[];
   /** Background art revealed under the cursor spotlight. */
   image?: string;
-  /** Company mark shown beside the heading. */
+  /** Company mark shown beside (or instead of) the heading. */
   logo?: string;
+  /** Institution behind the work, shown as an icon-only mark. */
+  institution?: { name: string; logo?: string };
+  /** Further reading beyond the main `href`. */
+  extraLinks?: { label: string; href: string }[];
 };
 
 export type SectionKind =
   | "timing-tower"   // the classic entry list, F1 timing-tower styling
+  | "feature"        // a single headline entry, given a panel of its own
+  | "papers"         // research, laid out like a citation list
   | "grid"           // card grid, filterable
   | "credentials"    // education / super-licence cards
   | "skills"         // marquee chip rows
@@ -142,7 +148,7 @@ export const sections: Section[] = [
   {
     id: "startup",
     label: "STARTUP",
-    kind: "timing-tower",
+    kind: "feature",
     blurb: "Building something people use.",
     entries: [
       {
@@ -150,7 +156,7 @@ export const sections: Section[] = [
         summary:
           "A sleep app for people with insomnia. A wristband reads your heartbeat and the app adapts in real time to help you fall asleep.",
         href: "https://projectsomnia.com",
-        image: "/assets/activities/somnia.svg",
+        image: "/assets/activities/somnia.jpg",
         title: "Somnia",
         org: "Sleep-tech Startup — Northwestern Garage",
         role: "Founder & CEO",
@@ -297,16 +303,24 @@ export const sections: Section[] = [
   {
     id: "research",
     label: "RESEARCH",
-    kind: "timing-tower",
+    kind: "papers",
     blurb: "Supervised and published work.",
     entries: [
       {
         id: "netflix",
+        extraLinks: [
+          {
+            label: "CCIR Student Spotlight interview",
+            href: "https://www.youtube.com/watch?v=Lzez24Y-KZk",
+          },
+        ],
+        institution: { name: "University of Cambridge", logo: "/assets/logos/cambridge.svg" },
         summary:
           "Testing whether Netflix's share price actually moves when it releases new shows, or whether that link is imagined.",
         href: "https://www.researchgate.net/publication/388502227_How_do_Media_Releases_Affect_Netflix's_Stock",
         image: "/assets/activities/netflix.svg",
         title: "Netflix Releases & Stock Price Volatility",
+        org: "University of Cambridge",
         role: "Research Author",
         date: "2022 - 2023",
         tags: ["Research", "Published"],
@@ -318,12 +332,13 @@ export const sections: Section[] = [
       },
       {
         id: "alphabeta",
+        institution: { name: "Alpha Beta Investments" },
         summary:
           "A machine-learning model that estimates how risky an investment portfolio is before you put money into it.",
         image: "/assets/activities/alphabeta.svg",
-        title: "Alpha Beta Investments",
-        org: "New York",
-        role: "Student Researcher",
+        title: "Financial Analysis",
+        org: "Alpha Beta Investments, New York",
+        role: "Student Researcher under Dr Joseph Shamshian through VeritasAI",
         date: "2023",
         tags: ["Research", "Finance"],
         stats: [{ value: 78, suffix: "%", label: "model accuracy" }],
@@ -334,11 +349,12 @@ export const sections: Section[] = [
       },
       {
         id: "sura",
+        institution: { name: "Northwestern Institute for Policy Research", logo: "/assets/logos/northwestern.svg" },
         summary:
           "A five-year study on how students see themselves and which opportunities they take. I built the data models underneath it.",
         href: "https://adamlab.sesp.northwestern.edu/project-overview/",
         image: "/assets/activities/sura.svg",
-        title: "IPR SURA Grant",
+        title: "SURA Grant Recipient",
         org: "Northwestern Institute for Policy Research",
         role: "Research Assistant",
         date: "Summer 2026",

@@ -1,0 +1,299 @@
+.feature-sec {
+  /* Background and colour are inherited from <body>; the section paints
+     nothing of its own here, it would break the lit-section inversion
+     transition. */
+  padding-bottom: 56px;
+}
+
+.feature-label {
+  display: block;
+  margin-top: 46px;
+  margin-bottom: 10px;
+}
+
+.feature-blurb {
+  margin: 0 0 40px;
+  font-size: 20px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- panel ---------- */
+.feature-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 64px 56px;
+}
+
+.feature-panel + .feature-panel {
+  margin-top: 40px;
+}
+
+.feature-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.feature-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+/* ---------- fastest lap marker ----------
+   A small F1-style purple marker naming what the panel's border shine
+   means, rather than leaving it decorative and unexplained. */
+.feature-fastest-marker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--c-purple);
+  cursor: help;
+}
+
+.feature-fastest-dot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  background: var(--c-purple);
+}
+
+.feature-date {
+  font-size: 18px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- title / role / org ---------- */
+.feature-title {
+  margin: 0 0 12px;
+  font-size: clamp(40px, 6vw, 60px);
+  font-weight: var(--fw-light);
+  line-height: 1.05;
+  color: var(--fg);
+}
+
+.feature-title-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  color: inherit;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.feature-title-link:hover {
+  color: var(--c-accent);
+}
+
+.feature-title-arrow {
+  display: inline-block;
+  font-size: 0.55em;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.feature-title-link:hover .feature-title-arrow {
+  transform: translateX(5px);
+}
+
+.feature-role {
+  margin: 0;
+  font-size: var(--fs-role);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.feature-org {
+  margin: 6px 0 0;
+  font-size: 16px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- oversized stats ----------
+   The strongest thing on the panel: huge count-up numbers, tiny dim labels
+   beneath — the same scale-contrast trick the podium uses for P1's number. */
+.feature-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 56px;
+  margin: 48px 0 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.feature-stat {
+  min-width: 0;
+}
+
+.feature-stat-value {
+  font-size: clamp(34px, 6vw, 56px);
+  font-weight: var(--fw-light);
+  line-height: 1;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.feature-stat-label {
+  margin-top: 10px;
+  max-width: 180px;
+  font-size: 11px;
+  font-weight: var(--fw-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-dim);
+}
+
+/* ---------- summary / bullets ---------- */
+.feature-summary {
+  margin: 40px 0 0;
+  max-width: 640px;
+  font-size: var(--fs-lede);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
+  color: var(--fg);
+}
+
+.feature-bullets {
+  margin: 18px 0 0;
+  padding-left: 24px;
+  max-width: 640px;
+  list-style: disc;
+}
+
+.feature-bullets li {
+  font-size: 17px;
+  font-weight: var(--fw-light);
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.feature-bullets li + li {
+  margin-top: 10px;
+}
+
+/* ---------- cursor-revealed artwork ----------
+   Same technique as ProjectGrid's .proj-art: an SVG <image> masked by a
+   <circle> whose position is written imperatively on pointermove (no React
+   state per frame), with the circle carrying the strong displacement
+   filter so the reveal's edge ripples while the artwork stays sharp. */
+.feature-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.feature-panel:hover .feature-art {
+  opacity: 0.8;
+}
+
+/* ---------- fastest lap shine ----------
+   A purple sweep travelling continuously around the panel's border, built
+   from a gradient clipped to the border ring via a two-layer mask (same
+   technique as .proj-card--fastest::after). Purple is F1's fastest-lap
+   colour, and this is the panel the owner specifically asked to have it. */
+.feature-panel--fastest::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    var(--c-purple) 48%,
+    #d9a4ff 52%,
+    var(--c-purple) 56%,
+    transparent 64%
+  );
+  background-size: 280% 100%;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: feature-shine 3.6s var(--ease-in-out) infinite;
+}
+
+@keyframes feature-shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -80% 0;
+  }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .feature-panel {
+    padding: 44px 32px;
+  }
+
+  .feature-stats {
+    gap: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .feature-sec {
+    padding-bottom: 64px;
+  }
+
+  .feature-panel {
+    padding: 32px 20px;
+  }
+
+  .feature-top {
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .feature-date {
+    font-size: 15px;
+  }
+
+  .feature-summary {
+    margin-top: 28px;
+  }
+
+  .feature-stats {
+    margin-top: 32px;
+    padding-top: 24px;
+    gap: 28px;
+  }
+
+  .feature-stat-label {
+    font-size: 10px;
+    max-width: 130px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-art {
+    display: none;
+  }
+
+  .feature-panel--fastest::after {
+    animation: none;
+    background: var(--c-purple);
+    opacity: 0.45;
+  }
+}

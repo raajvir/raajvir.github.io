@@ -86,7 +86,7 @@
 }
 
 .sec-entry--art-active .sec-art {
-  opacity: 1;
+  opacity: 0.8;
   transform: translate(calc(var(--art-x, 50%) - 50%), calc(var(--art-y, 50%) - 50%))
     scale(1);
 }
@@ -331,14 +331,24 @@
 }
 
 .sec-logo {
-  /* Sits beside the heading, capped so a wide wordmark cannot crowd it. */
-  height: 22px;
+  /* Stands in for the company name, so it carries the weight a 30px
+     heading would have. */
+  height: 34px;
   width: auto;
-  max-width: 110px;
+  max-width: 210px;
   object-fit: contain;
   object-position: left center;
   flex: 0 0 auto;
   display: block;
+}
+
+/* The mark replaces the text, so the heading only needs to align it. */
+.sec-title--logo {
+  line-height: 1;
+}
+
+.sec-title--logo .sec-title-link {
+  align-items: center;
 }
 
 /* ---------- fastest lap ----------
@@ -379,7 +389,7 @@
 
 @media (max-width: 900px) {
   .sec-entry--fastest::after { display: none; }
-  .sec-logo { height: 18px; max-width: 92px; }
+  .sec-logo { height: 26px; max-width: 150px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -388,4 +398,29 @@
     background: var(--c-purple);
     opacity: 0.5;
   }
+}
+
+/* ---------- further reading ---------- */
+.sec-links {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.sec-links a {
+  font-size: 16px;
+  color: var(--fg-dim);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.sec-links a:hover,
+.sec-links a:focus-visible {
+  color: var(--c-accent);
+  border-bottom-color: var(--c-accent);
 }

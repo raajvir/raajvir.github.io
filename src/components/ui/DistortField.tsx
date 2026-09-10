@@ -17,7 +17,7 @@ import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 const FILTERS = [
   { id: "art-distort", scale: 17, base: [0.013, 0.019] },
   { id: "art-distort-soft", scale: 4, base: [0.009, 0.013] },
-  { id: "face-distort", scale: 11, base: [0.015, 0.021] },
+  { id: "face-distort", scale: 4, base: [0.015, 0.021] },
 ] as const;
 
 export function DistortField() {
@@ -33,16 +33,16 @@ export function DistortField() {
 
     const tick = (now: number) => {
       frame = requestAnimationFrame(tick);
-      // ~30fps: fast enough to read as live movement, still cheap.
-      if (now - last < 33) return;
+      // ~20fps is plenty for a slow drift and keeps the filter cheap.
+      if (now - last < 50) return;
       last = now;
       const t = (now - start) / 1000;
 
       FILTERS.forEach((f, i) => {
         const turb = turbRefs.current[i];
         if (!turb) return;
-        const fx = f.base[0] + Math.sin(t * 1.6) * 0.005;
-        const fy = f.base[1] + Math.cos(t * 1.25) * 0.006;
+        const fx = f.base[0] + Math.sin(t * 0.55) * 0.005;
+        const fy = f.base[1] + Math.cos(t * 0.42) * 0.006;
         turb.setAttribute("baseFrequency", `${fx.toFixed(5)} ${fy.toFixed(5)}`);
       });
     };
