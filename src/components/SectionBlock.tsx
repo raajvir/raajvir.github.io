@@ -1,3 +1,4 @@
+import type React from "react";
 import { useEffect, useMemo, useRef } from "react";
 import { motion } from "motion/react";
 import type { Section } from "../data/site";
@@ -63,8 +64,15 @@ export function SectionBlock({ section }: { section: Section }) {
       // aspect ratio, so its size has to be measured rather than assumed.
       const rect = entry.getBoundingClientRect();
       const art = entry.querySelector<HTMLElement>(".sec-art");
-      const halfW = (art?.offsetWidth ?? 0) / 2;
-      const halfH = (art?.offsetHeight ?? 0) / 2;
+      const w = art?.offsetWidth ?? 0;
+      const h = art?.offsetHeight ?? 0;
+      const rect2 = entry.querySelector<SVGRectElement>(".sec-art-maskrect");
+      if (rect2 && rect2.getAttribute("width") !== String(w)) {
+        rect2.setAttribute("width", String(w));
+        rect2.setAttribute("height", String(h));
+      }
+      const halfW = w / 2;
+      const halfH = h / 2;
       const x = clamp(event.clientX - rect.left, halfW, rect.width - halfW);
       const y = clamp(event.clientY - rect.top, halfH, rect.height - halfH);
       entry.style.setProperty("--art-x", `${x}px`);
@@ -101,7 +109,43 @@ export function SectionBlock({ section }: { section: Section }) {
             return (
               <Reveal as="li" index={i} key={entry.id} className={entryClassName}>
                 {hasArt && (
-                  <img className="sec-art" src={entry.image} alt="" aria-hidden="true" />
+                  <>
+                    {/* The mask rect is sized to the image in JS: each photo has
+                        its own aspect ratio, so a shared mask cannot line up
+                        with every card's edges. */}
+                    <svg className="sec-art-defs" aria-hidden="true">
+                      <mask
+                        id={`sec-art-mask-${entry.id}`}
+                        maskUnits="userSpaceOnUse"
+                        x="-40"
+                        y="-40"
+                        width="2000"
+                        height="2000"
+                      >
+                        <rect
+                          className="sec-art-maskrect"
+                          x="0"
+                          y="0"
+                          width="10"
+                          height="10"
+                          fill="#fff"
+                          filter="url(#art-distort)"
+                        />
+                      </mask>
+                    </svg>
+                    <img
+                      className="sec-art"
+                      src={entry.image}
+                      alt=""
+                      aria-hidden="true"
+                      style={
+                        {
+                          mask: `url(#sec-art-mask-${entry.id})`,
+                          WebkitMask: `url(#sec-art-mask-${entry.id})`,
+                        } as React.CSSProperties
+                      }
+                    />
+                  </>
                 )}
                 <motion.span
                   className="sec-bar"

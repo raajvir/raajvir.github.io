@@ -1,3 +1,4 @@
+import type React from "react";
 import { useEffect, useRef } from "react";
 import type { Section } from "../data/site";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
@@ -49,8 +50,15 @@ export function Credentials({ section }: { section: Section }) {
       // Clamp the card's centre so it never leaves the row. Its size follows
       // the image's own aspect ratio, so it has to be measured.
       const r = card.getBoundingClientRect();
-      const halfW = art.offsetWidth / 2;
-      const halfH = art.offsetHeight / 2;
+      const w = art.offsetWidth;
+      const h = art.offsetHeight;
+      const maskRect = card.querySelector<SVGRectElement>(".cred-art-maskrect");
+      if (maskRect && maskRect.getAttribute("width") !== String(w)) {
+        maskRect.setAttribute("width", String(w));
+        maskRect.setAttribute("height", String(h));
+      }
+      const halfW = w / 2;
+      const halfH = h / 2;
       const x = Math.min(Math.max(event.clientX - r.left, halfW), r.width - halfW);
       const y = Math.min(Math.max(event.clientY - r.top, halfH), r.height - halfH);
       art.style.setProperty("--art-x", `${x}px`);
@@ -85,7 +93,40 @@ export function Credentials({ section }: { section: Section }) {
                 className={`cred-card${entry.image ? " cred-card--has-art" : ""}`}
               >
                 {entry.image && !reduced && (
-                  <img className="cred-art" src={entry.image} alt="" aria-hidden="true" />
+                  <>
+                    <svg className="cred-art-defs" aria-hidden="true">
+                      <mask
+                        id={`cred-art-mask-${entry.id}`}
+                        maskUnits="userSpaceOnUse"
+                        x="-40"
+                        y="-40"
+                        width="2000"
+                        height="2000"
+                      >
+                        <rect
+                          className="cred-art-maskrect"
+                          x="0"
+                          y="0"
+                          width="10"
+                          height="10"
+                          fill="#fff"
+                          filter="url(#art-distort)"
+                        />
+                      </mask>
+                    </svg>
+                    <img
+                      className="cred-art"
+                      src={entry.image}
+                      alt=""
+                      aria-hidden="true"
+                      style={
+                        {
+                          mask: `url(#cred-art-mask-${entry.id})`,
+                          WebkitMask: `url(#cred-art-mask-${entry.id})`,
+                        } as React.CSSProperties
+                      }
+                    />
+                  </>
                 )}
                 <span className="cred-bar" aria-hidden="true" />
 

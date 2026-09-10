@@ -56,6 +56,12 @@
    --art-x/--art-y (px, set by a JS pointermove handler and already clamped
    there so the card never leaves the row). The lag comes from transitioning
    the transform, which keeps it on the compositor. */
+.sec-art-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
 .sec-art {
   position: absolute;
   left: 0;
@@ -70,9 +76,6 @@
   pointer-events: none;
   border: 1px solid var(--line);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-  /* Applied to the image itself rather than a wrapper, so the card's own
-     edges ripple along with the picture. */
-  filter: url(#art-distort);
   opacity: 0;
   /* The 50% offsets centre the card on the pointer. */
   transform: translate(calc(var(--art-x, 50%) - 50%), calc(var(--art-y, 50%) - 50%))
@@ -330,6 +333,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sec-art {
-    filter: none;
+    -webkit-mask: none !important;
+    mask: none !important;
   }
 }
