@@ -178,7 +178,7 @@ function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
       {hasArt && (
         <svg className="proj-art" aria-hidden="true" preserveAspectRatio="none">
           <defs>
-            <mask id={maskId} maskUnits="userSpaceOnUse">
+            <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="2000" height="2000">
               <circle
                 ref={holeRef}
                 cx="-500"

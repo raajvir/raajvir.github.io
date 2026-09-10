@@ -15,8 +15,8 @@ import "./Hero.css";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /** Resting / hover / tap spotlight radii, in px. */
-const SPOT_R_HOVER = 86;
-const SPOT_R_TAP = 98;
+const SPOT_R_HOVER = 52;
+const SPOT_R_TAP = 62;
 const SPOT_SPRING = { stiffness: 250, damping: 28 };
 
 type Props = {
@@ -101,6 +101,7 @@ export function Hero({ launched }: Props) {
   const reduced = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const figureRef = useRef<HTMLElement>(null);
+  const holeRef = useRef<SVGCircleElement>(null);
   const helmetRef = useRef<HTMLImageElement>(null);
 
   const [coarse, setCoarse] = useState(
@@ -122,16 +123,17 @@ export function Hero({ launched }: Props) {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Write the spring values onto the figure's custom properties imperatively,
-  // so the beam glides at 60fps without triggering React re-renders.
+  // Drive the mask circle imperatively so the reveal glides at 60fps without
+  // triggering React re-renders. Only this circle carries the displacement
+  // filter, so the ripple is in the boundary and the helmet stays sharp.
   useMotionValueEvent(springX, "change", (latest) => {
-    figureRef.current?.style.setProperty("--spot-x", `${latest}px`);
+    holeRef.current?.setAttribute("cx", String(latest));
   });
   useMotionValueEvent(springY, "change", (latest) => {
-    figureRef.current?.style.setProperty("--spot-y", `${latest}px`);
+    holeRef.current?.setAttribute("cy", String(latest));
   });
   useMotionValueEvent(spotR, "change", (latest) => {
-    figureRef.current?.style.setProperty("--spot-r", `${latest}px`);
+    holeRef.current?.setAttribute("r", String(Math.max(0, latest)));
   });
 
   // Fine-pointer / mouse: track the cursor across the whole hero so the beam
@@ -254,7 +256,6 @@ export function Hero({ launched }: Props) {
           initial={reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           animate={reduced ? { opacity: 1, y: 0 } : launched ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           transition={reduced ? { duration: 0 } : { duration: 0.9, ease: EASE, delay: 0.15 }}
-          style={{ "--spot-x": "50%", "--spot-y": "30%", "--spot-r": "0px" } as React.CSSProperties}
           tabIndex={0}
           role="button"
           aria-label="Reveal the face behind the helmet"
@@ -269,17 +270,41 @@ export function Hero({ launched }: Props) {
           />
           {/*
             The mask lives on this full-figure-sized wrapper (not the small helmet
-            image itself) so its coordinate space matches --spot-x/--spot-y, which
+            image itself) so its coordinate space matches the mask circle, which
             are measured relative to the figure. The <img> inside keeps its original
             size/offset untouched; the wrapper's mask clips it (and anything else in
             the subtree) wherever the spotlight circle is.
           */}
-          <div className="hero-portrait__distort" aria-hidden="true">
-            <div className="hero-portrait__helmet-wrap">
-              <img ref={helmetRef} src="/assets/helmet.png" alt="" className="hero-portrait__helmet" />
-            </div>
+          <svg className="hero-portrait__helmet-svg" aria-hidden="true">
+            <defs>
+              {/* An explicit region is required: the host <svg> is 0x0, so the
+                  default -10%/120% mask region resolves to nothing and the
+                  helmet disappears entirely. */}
+              <mask
+                id="helmet-hole"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="2000"
+                height="2000"
+              >
+                {/* White shows the helmet; the displaced black circle punches
+                    the rippled window through it. */}
+                <rect x="0" y="0" width="2000" height="2000" fill="#fff" />
+                <circle
+                  ref={holeRef}
+                  cx="200"
+                  cy="150"
+                  r="0"
+                  fill="#000"
+                  filter="url(#art-distort)"
+                />
+              </mask>
+            </defs>
+          </svg>
+          <div className="hero-portrait__helmet-wrap">
+            <img ref={helmetRef} src="/assets/helmet.png" alt="" className="hero-portrait__helmet" />
           </div>
-          <div className="hero-portrait__beam" aria-hidden="true" />
         </motion.figure>
       </div>
 

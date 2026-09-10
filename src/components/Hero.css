@@ -161,44 +161,19 @@
 
 /*
  * Full-figure-sized mask wrapper: its box matches the figure's own box, which
- * is the coordinate space --spot-x/--spot-y are measured in. The mask hides
+ * is the coordinate space the mask circle is measured in. The mask hides
  * this wrapper's contents (the helmet) inside the spotlight circle and keeps
  * them visible outside it, revealing the portrait underneath.
  */
-/* Carries the displacement for the helmet reveal. CSS applies filter before
-   mask, so it must wrap the masked element to ripple the circle's edge. */
-.hero-portrait__distort {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  filter: url(#art-distort);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-portrait__distort {
-    filter: none;
-  }
-}
-
 .hero-portrait__helmet-wrap {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  -webkit-mask-image: radial-gradient(
-    circle var(--spot-r) at var(--spot-x) var(--spot-y),
-    transparent 0%,
-    transparent 88%,
-    #000 100%
-  );
-  mask-image: radial-gradient(
-    circle var(--spot-r) at var(--spot-x) var(--spot-y),
-    transparent 0%,
-    transparent 88%,
-    #000 100%
-  );
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  /* Masked by a filtered circle rather than a feathered gradient: hard cut,
+     rippled boundary, helmet artwork untouched. */
+  -webkit-mask: url(#helmet-hole);
+  mask: url(#helmet-hole);
 }
 
 .hero-portrait__helmet {
@@ -212,22 +187,11 @@
   display: block;
 }
 
-/*
- * A hairline ring exactly at the reveal boundary — just enough to sell the
- * cut edge without washing out the face like the old soft beam glow did.
- */
-.hero-portrait__beam {
+/* Holds only the <mask> definition; nothing of it renders. */
+.hero-portrait__helmet-svg {
   position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background: radial-gradient(
-    circle var(--spot-r) at var(--spot-x) var(--spot-y),
-    transparent 0%,
-    transparent 97%,
-    rgba(255, 255, 255, 0.25) 99%,
-    transparent 101%
-  );
+  width: 0;
+  height: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
