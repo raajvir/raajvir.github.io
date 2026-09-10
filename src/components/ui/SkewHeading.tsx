@@ -6,8 +6,8 @@ type Props = { id?: string; className?: string; children: ReactNode; max?: numbe
 
 /**
  * A section heading that leans with scroll velocity. Rendered as the <h2>
- * itself rather than a wrapper, so sibling selectors such as
- * `.sec-label:has(+ .sec-blurb)` keep working.
+ * itself rather than a wrapper, so sibling and :has() selectors targeting
+ * the heading keep working.
  */
 export function SkewHeading({ id, className, children, max = 6 }: Props) {
   const reduced = usePrefersReducedMotion();

@@ -11,19 +11,6 @@
   margin-bottom: 44px;
 }
 
-/* Tighten the label's own margin when a blurb follows, so the two vertical
-   margins collapse to ~10px instead of the label's usual 44px. */
-.sec-label:has(+ .sec-blurb) {
-  margin-bottom: 10px;
-}
-
-.sec-blurb {
-  margin: 0 0 34px;
-  font-size: 20px;
-  font-weight: var(--fw-light);
-  color: var(--fg-dim);
-}
-
 .sec-list {
   display: flex;
   flex-direction: column;

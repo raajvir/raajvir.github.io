@@ -6,15 +6,9 @@
 .refs-label {
   display: block;
   margin-top: 44px;
-}
-
-.refs-note {
-  margin-top: 10px;
-  margin-bottom: 48px;
-  font-size: 16px;
-  font-weight: var(--fw-light);
-  color: var(--fg-dim);
-  max-width: 46em;
+  /* The note that used to carry this gap is gone; hold the same rhythm as
+     the other section labels. */
+  margin-bottom: 44px;
 }
 
 /* ---------- pit wall ----------
@@ -195,9 +189,5 @@
 @media (max-width: 600px) {
   .refs {
     padding-bottom: 44px;
-  }
-
-  .refs-note {
-    margin-bottom: 36px;
   }
 }

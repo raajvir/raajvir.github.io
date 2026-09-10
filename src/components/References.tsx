@@ -89,7 +89,6 @@ export function References() {
         <SkewHeading id="refs-heading" className="section-label refs-label">
           {references.label}
         </SkewHeading>
-        <p className="refs-note">{references.note}</p>
 
         <div className="refs-wall">
           {reduced ? (

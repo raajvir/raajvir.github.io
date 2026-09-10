@@ -342,7 +342,6 @@ export function Credentials({ section }: { section: Section }) {
         <SkewHeading id={labelId} className="section-label cred-label">
           {section.label}
         </SkewHeading>
-        {section.blurb && <p className="cred-blurb">{section.blurb}</p>}
 
         <ul className="cred-grid">
           {section.entries.map((entry, i) => (

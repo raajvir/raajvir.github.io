@@ -9,17 +9,6 @@
   margin-bottom: 44px;
 }
 
-.journalism-label:has(+ .journalism-blurb) {
-  margin-bottom: 10px;
-}
-
-.journalism-blurb {
-  margin: 0 0 34px;
-  font-size: 20px;
-  font-weight: var(--fw-light);
-  color: var(--fg-dim);
-}
-
 /* ---------- two-panel layout ---------- */
 .journalism-grid {
   display: grid;

@@ -215,7 +215,6 @@ export function ProjectGrid({ section }: { section: Section }) {
         <SkewHeading id={labelId} className="section-label proj-label">
           {section.label}
         </SkewHeading>
-        {section.blurb && <p className="proj-blurb">{section.blurb}</p>}
 
         {reduced ? (
           <div className="proj-grid">{cards}</div>

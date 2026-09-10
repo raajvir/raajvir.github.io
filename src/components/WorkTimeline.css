@@ -8,17 +8,6 @@
   margin-bottom: 44px;
 }
 
-.work-label:has(+ .work-blurb) {
-  margin-bottom: 10px;
-}
-
-.work-blurb {
-  margin: 0 0 34px;
-  font-size: 20px;
-  font-weight: var(--fw-light);
-  color: var(--fg-dim);
-}
-
 /* ---------- chart shell ---------- */
 .work-chart {
   --work-gutter: 150px;
@@ -86,7 +75,48 @@
 }
 
 .work-row {
+  position: relative;
   border-bottom: 1px solid var(--line);
+}
+
+.work-row:last-child {
+  border-bottom: 0;
+}
+
+/* ---------- photo reveal (expanded row only) ----------
+   Copied from SectionBlock's cursor-trailing art card: an absolutely
+   positioned image, sized by its own aspect ratio (never cropped), masked
+   by a filtered rect so its edges ripple, translated to the pointer with a
+   transitioned transform for the lag. Mounted only while the row is open,
+   on a fine pointer, with motion allowed. */
+.work-art-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.work-art {
+  filter: url(#art-distort-soft);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  width: auto;
+  height: auto;
+  max-width: 34%;
+  max-height: 210px;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  /* The 50% offsets centre the card on the pointer. */
+  transform: translate(calc(var(--art-x, 50%) - 50%), calc(var(--art-y, 50%) - 50%)) scale(0.94);
+  transition: transform 0.34s var(--ease-out), opacity 0.28s var(--ease-out);
+}
+
+.work-row--art-active .work-art {
+  opacity: 0.85;
+  transform: translate(calc(var(--art-x, 50%) - 50%), calc(var(--art-y, 50%) - 50%)) scale(1);
 }
 
 .work-row-trigger {
@@ -142,39 +172,46 @@
   transition: color var(--dur-fast) var(--ease-out);
 }
 
+/* Quiet by default: the date lives over the bar's own start on desktop
+   (see .work-row-bar-date) and only appears here — in the row's header —
+   on the mobile stacked fallback, which has no axis to hang it on, or as a
+   graceful fallback when an entry has no period to position a bar with. */
 .work-row-date {
+  display: none;
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--fg-dim);
   white-space: nowrap;
 }
 
-.work-row-headline-stat {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-left: auto;
-  white-space: nowrap;
-}
-
-.work-row-headline-value {
-  font-size: 20px;
-  font-weight: var(--fw-light);
-  color: var(--fg);
-}
-
-.work-row-headline-label {
-  font-size: 11px;
-  font-weight: var(--fw-regular);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fg-dim);
+.work-row-date.work-row-date--visible {
+  display: inline;
 }
 
 .work-row-track {
   position: relative;
   height: 12px;
+  margin-top: 22px;
   background: var(--line-soft);
+}
+
+/* The date, sitting directly above where its bar begins so the label and
+   the bar read as one object. */
+.work-row-bar-date {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  transform: translateX(0);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+/* Bars hard against the axis's right edge (Kaizen, Polymarket) would run
+   the label off the track if it grew rightward from the bar's start, so it
+   flips to grow backward from that same point instead. */
+.work-row-bar-date--flip {
+  transform: translateX(-100%);
 }
 
 .work-bar {
@@ -213,6 +250,7 @@
   display: grid;
   grid-template-rows: minmax(0, 0fr);
   margin-left: calc(var(--work-gutter) + var(--work-gap));
+  overflow: hidden;
   transition: grid-template-rows 0.35s var(--ease-out);
 }
 
@@ -222,17 +260,19 @@
 
 .work-detail-inner {
   overflow: hidden;
+  /* A generous panel, not text jammed under a bar — asked for twice, so
+     err generous rather than subtle. */
+  padding: 44px 0 48px;
 }
 
 .work-detail-location {
-  margin: 0 0 8px;
-  padding-top: 4px;
+  margin: 0 0 14px;
   font-size: 13px;
   color: var(--fg-dim);
 }
 
 .work-detail-summary {
-  margin: 4px 0 0;
+  margin: 0;
   max-width: 640px;
   font-size: 17px;
   font-weight: var(--fw-light);
@@ -241,7 +281,7 @@
 }
 
 .work-detail-bullets {
-  margin: 12px 0 0;
+  margin: 36px 0 0;
   padding-left: 20px;
   list-style: disc;
   max-width: 640px;
@@ -255,16 +295,31 @@
 }
 
 .work-detail-bullets li + li {
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
+/* The headline metric is hidden entirely while collapsed (it isn't
+   rendered then at all) and fades/slides in once the row opens, rather
+   than popping in sync with the panel's height. */
 .work-detail-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 26px;
-  margin: 16px 0 22px;
+  align-items: flex-end;
+  gap: 36px;
+  margin: 40px 0 6px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
 }
 
+.work-row--expanded .work-detail-stats {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.12s;
+}
+
+/* The first tile is the headline figure — it keeps the row's right-hand
+   slot, but no longer a louder style than the stats beside it. */
 .work-detail-stat-value {
   font-size: 22px;
   font-weight: var(--fw-light);
@@ -320,14 +375,20 @@
     max-height: 30px;
   }
 
-  .work-row-headline-stat {
-    margin-left: 0;
-    flex-basis: 100%;
+  /* No shared axis here, so the date moves back into the header and the
+     bar-anchored copy (which would have nothing to anchor to) hides. */
+  .work-row-date {
+    display: inline;
+  }
+
+  .work-row-bar-date {
+    display: none;
   }
 
   .work-row-track {
     width: 55%;
     max-width: 200px;
+    margin-top: 10px;
   }
 
   .work-bar {

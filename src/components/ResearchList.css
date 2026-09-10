@@ -9,21 +9,13 @@
   margin-bottom: 44px;
 }
 
-.research-label:has(+ .research-blurb) {
-  margin-bottom: 10px;
-}
-
-.research-blurb {
-  margin: 0 0 34px;
-  font-size: 20px;
-  font-weight: var(--fw-light);
-  color: var(--fg-dim);
-}
-
 /* ---------- grid ---------- */
 .research-grid {
   display: grid;
   grid-template-columns: 1fr;
+  /* Cards are left to their own content height — a two-line title or an
+     extra stat should not stretch its row-mate and leave a dead band. */
+  align-items: start;
   gap: 28px;
   margin: 0;
   padding: 0;
@@ -42,10 +34,11 @@
 
 /* ---------- card: reads as a paper's first page ---------- */
 .research-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 36px;
+  /* Clips the curled corner (below) to the card's own sharp-cornered box. */
+  overflow: hidden;
   border: 1px solid var(--line);
   background: var(--bg);
   transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out),
@@ -58,8 +51,84 @@
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
 }
 
+/* ---------- curled corner: a fold, not a rounded corner ---------- */
+.research-curl {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  height: 28px;
+  clip-path: polygon(100% 100%, 100% 0, 0 100%);
+  background: linear-gradient(135deg, #e6ddd2 0%, #f5f2ec 55%, var(--bg) 100%);
+  filter: drop-shadow(-2px -2px 3px rgba(0, 0, 0, 0.16));
+  pointer-events: none;
+  z-index: 5;
+  transition: width var(--dur-fast) var(--ease-out), height var(--dur-fast) var(--ease-out),
+    filter var(--dur-fast) var(--ease-out);
+}
+
+.research-card:hover .research-curl {
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(-3px -3px 4px rgba(0, 0, 0, 0.22));
+}
+
+/* ---------- top: the figure as ground, masthead + title set on it ----------
+   The figure fills this block edge-to-edge (an absolutely positioned child
+   ignores its containing block's padding, so it bleeds under the masthead's
+   own inset for free) at low opacity, then a mask fades it out from the
+   point the title ends so it has dissolved into the card background by the
+   time the abstract begins below. Per-drawing opacity overrides live further
+   down, keyed off `data-figure` on the card. */
+.research-card-top {
+  position: relative;
+  overflow: hidden;
+  padding: 26px 32px 22px;
+}
+
+.research-card-top.has-figure {
+  /* Enough room for the ground to read as a real drawing, not a sliver —
+     but sized close to the masthead + title's natural height so a short
+     title does not leave a dead gap before the abstract. */
+  min-height: 200px;
+}
+
+.research-card-figure {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: var(--research-figure-opacity, 0.22);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 82%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 38%, transparent 82%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Per-drawing tuning: the candlestick chart and the cell heatmap carry real
+   black fills and read as competing artwork at the shared default, so they
+   are held further back than the sparser scatter plot. */
+.research-card[data-figure="netflix"] {
+  --research-figure-opacity: 0.16;
+}
+
+.research-card[data-figure="sura"] {
+  --research-figure-opacity: 0.15;
+}
+
+.research-card[data-figure="alphabeta"] {
+  --research-figure-opacity: 0.24;
+}
+
+.research-card[data-figure="light-sleep"] {
+  --research-figure-opacity: 0.2;
+}
+
 /* ---------- masthead: crest + institution name, date + published stamp ---------- */
 .research-card-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -87,12 +156,16 @@
   max-width: 64px;
   object-fit: contain;
   display: block;
+  /* A soft white halo so a multi-colour crest stays legible over whatever
+     the figure happens to be doing underneath it. */
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.95));
 }
 
 .research-crest-fallback {
   width: 26px;
   height: 26px;
   border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,11 +176,16 @@
 }
 
 .research-inst-name {
+  /* Flex items default to a content-based min-width, which refuses to
+     shrink below the name's unwrapped width and would otherwise push the
+     header wider than the card at narrow viewports. */
+  min-width: 0;
   font-size: 11px;
   font-weight: var(--fw-light);
   line-height: 1.25;
   color: var(--fg-dim);
   overflow-wrap: break-word;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 2px rgba(255, 255, 255, 0.95);
 }
 
 .research-card-meta {
@@ -123,11 +201,13 @@
   font-weight: var(--fw-light);
   color: var(--fg-dim);
   white-space: nowrap;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 2px rgba(255, 255, 255, 0.95);
 }
 
 .research-badge {
   padding: 3px 7px;
   border: 1px solid var(--c-accent);
+  background: rgba(255, 255, 255, 0.85);
   font-size: 9px;
   font-weight: var(--fw-bold);
   line-height: 1;
@@ -137,12 +217,11 @@
   white-space: nowrap;
 }
 
-/* ---------- title block: centred, like a paper's masthead ---------- */
+/* ---------- title block: centred, set directly on the figure ---------- */
 .research-titleblock {
+  position: relative;
+  z-index: 1;
   text-align: center;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--line-soft);
 }
 
 .research-title {
@@ -151,12 +230,15 @@
   font-weight: var(--fw-light);
   line-height: 1.2;
   color: var(--fg);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.85), 0 0 3px rgba(255, 255, 255, 0.9);
 }
 
+/* Plain inline flow, not inline-flex: a flex item's default min-width:auto
+   refuses to shrink below its unwrapped width, which would force a long
+   title onto one line and clip it against `.research-card-top`'s
+   overflow. A title is the content — it must wrap to as many lines as it
+   needs, so the arrow rides along as a normal inline element instead. */
 .research-title-link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
   color: inherit;
   transition: color var(--dur-fast) var(--ease-out);
 }
@@ -167,6 +249,7 @@
 
 .research-title-arrow {
   display: inline-block;
+  margin-left: 6px;
   transition: transform var(--dur-fast) var(--ease-out);
 }
 
@@ -179,10 +262,22 @@
   font-size: 14px;
   font-weight: var(--fw-light);
   color: var(--fg-dim);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.9);
 }
 
 .research-org {
   margin-top: 2px;
+}
+
+/* ---------- body: clean background below the figure's fade ----------
+   Block flow, not flex — the children already stack in source order, and a
+   flex column with a stretching child is exactly what left a dead band
+   under a short card's bullets when its grid row-mate ran longer. Padding
+   matches `.research-card-top`'s inset so the abstract and bullets share
+   the masthead's left/right edge; the bottom keeps clear of the curled
+   corner (28-34px) with room to spare. */
+.research-card-body {
+  padding: 4px 32px 36px;
 }
 
 /* ---------- abstract ---------- */
@@ -197,35 +292,6 @@
   font-weight: var(--fw-light);
   line-height: var(--lh-body);
   color: var(--fg);
-}
-
-/* ---------- figure: the piece that makes it read as a paper ---------- */
-.research-figure {
-  margin: 0 0 24px;
-}
-
-.research-figure-frame {
-  display: block;
-  aspect-ratio: 8 / 5;
-  border: 1px solid var(--line);
-  overflow: hidden;
-  background: #f2f2f3;
-}
-
-.research-figure-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.research-figure-caption {
-  margin-top: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: var(--fg-dim);
-  text-align: center;
 }
 
 /* ---------- stats: a compact figure line ---------- */
@@ -265,7 +331,6 @@
   margin: 0;
   padding-left: 18px;
   list-style: disc;
-  flex: 1 0 auto;
 }
 
 .research-bullets li {
@@ -289,10 +354,15 @@
   border-top: 1px solid var(--line-soft);
 }
 
+/* Plain inline flow for the same reason as `.research-title-link` — a long
+   link label (the CCIR interview credit) must wrap on a narrow card rather
+   than force the row wider than the card. */
 .research-extra-link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
+  display: inline;
+  /* A flex item (of `.research-links`) defaults to a content-based
+     min-width regardless of its own `display`, which would still force
+     this wider than the row allows. */
+  min-width: 0;
   font-size: 12px;
   font-weight: var(--fw-regular);
   letter-spacing: 0.03em;
@@ -318,12 +388,30 @@
     padding-bottom: 64px;
   }
 
-  .research-card {
-    padding: 24px;
+  .research-card-top {
+    padding: 20px 22px 16px;
+  }
+
+  .research-card-top.has-figure {
+    min-height: 170px;
+  }
+
+  .research-card-body {
+    padding: 4px 22px 30px;
   }
 
   .research-title {
     font-size: calc(var(--fs-title) * 0.9);
+  }
+
+  .research-curl {
+    width: 22px;
+    height: 22px;
+  }
+
+  .research-card:hover .research-curl {
+    width: 26px;
+    height: 26px;
   }
 }
 

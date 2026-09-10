@@ -96,7 +96,6 @@ export function SectionBlock({ section }: { section: Section }) {
         <SkewHeading id={labelId} className="section-label sec-label">
           {section.label}
         </SkewHeading>
-        {section.blurb && <p className="sec-blurb">{section.blurb}</p>}
 
         <ul className="sec-list" ref={listRef}>
           {section.entries.map((entry, i) => {

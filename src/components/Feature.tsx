@@ -30,7 +30,6 @@ export function Feature({ section }: { section: Section }) {
         <SkewHeading id={labelId} className="section-label feature-label">
           {section.label}
         </SkewHeading>
-        {section.blurb && <p className="feature-blurb">{section.blurb}</p>}
 
         {section.entries.map((entry) => {
           const fastest = entry.fastest === true;

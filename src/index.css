@@ -94,8 +94,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   letter-spacing: var(--ls-label);
   color: var(--c-accent);
   text-transform: uppercase;
-  /* Dim while the section is not the one being read. */
-  opacity: 0.4;
+  /* Dim while the section is not the one being read — gently, so a heading
+     never reads as broken. */
+  opacity: 0.62;
   transition: opacity 0.45s var(--ease-out);
 }
 

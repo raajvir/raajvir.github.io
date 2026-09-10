@@ -100,7 +100,6 @@ export function Journalism({ section }: { section: Section }) {
         <SkewHeading id={labelId} className="section-label journalism-label">
           {section.label}
         </SkewHeading>
-        {section.blurb && <p className="journalism-blurb">{section.blurb}</p>}
 
         <div className="journalism-grid">
           {podcast && (

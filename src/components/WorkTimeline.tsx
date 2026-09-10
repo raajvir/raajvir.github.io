@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import type React from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
-import type { Entry, Section, Stat } from "../data/site";
+import type { Entry, Section } from "../data/site";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { CountUp } from "./ui/CountUp";
 import { Reveal } from "./ui/Reveal";
@@ -11,18 +12,47 @@ import "./WorkTimeline.css";
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const BAR_DURATION = 0.7;
 const MIN_BAR_WIDTH = "34px";
+const MONTH_ABBR = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
 
 type Domain = { start: number; end: number };
 type BarGeometry = { leftPct: number; widthPct: number; ongoing: boolean };
 
-/** "YYYY-MM" -> a decimal year (2026-06 -> 2026.4166...), or null if malformed. */
-function monthToDecimalYear(value: string): number | null {
+/** "YYYY-MM" -> { year, month }, or null if malformed. */
+function parseYearMonth(value: string): { year: number; month: number } | null {
   const match = /^(\d{4})-(\d{2})$/.exec(value);
   if (!match) return null;
   const year = Number(match[1]);
   const month = Number(match[2]);
   if (month < 1 || month > 12) return null;
-  return year + (month - 1) / 12;
+  return { year, month };
+}
+
+/** "YYYY-MM" -> a decimal year (2026-06 -> 2026.4166...), or null if malformed. */
+function monthToDecimalYear(value: string): number | null {
+  const ym = parseYearMonth(value);
+  return ym ? ym.year + (ym.month - 1) / 12 : null;
+}
+
+/** A real date range from `period`, e.g. "Jun – Aug 2026" or
+ *  "Jan 2026 – Present". Null when the period is missing or malformed, so
+ *  the caller can fall back to the plain `date` label. */
+function formatPeriodRange(period: NonNullable<Entry["period"]>): string | null {
+  const start = parseYearMonth(period.start);
+  if (!start) return null;
+  const startMonth = MONTH_ABBR[start.month - 1];
+
+  if (period.end === null) {
+    return `${startMonth} ${start.year} – Present`;
+  }
+  const end = parseYearMonth(period.end);
+  if (!end) return null;
+  const endMonth = MONTH_ABBR[end.month - 1];
+
+  return start.year === end.year
+    ? `${startMonth} – ${endMonth} ${end.year}`
+    : `${startMonth} ${start.year} – ${endMonth} ${end.year}`;
 }
 
 function nowAsDecimalYear(): number {
@@ -95,6 +125,7 @@ function WorkRow({
   onExpand,
   onCollapse,
   reduced,
+  artEnabled,
 }: {
   entry: Entry;
   index: number;
@@ -103,18 +134,26 @@ function WorkRow({
   onExpand: (id: string) => void;
   onCollapse: (id: string) => void;
   reduced: boolean;
+  artEnabled: boolean;
 }) {
-  const bar = computeBar(entry, domain);
-  const headline: Stat | undefined = entry.stats?.[0];
-  const restStats = entry.stats && entry.stats.length > 1 ? entry.stats.slice(1) : [];
-  const detailId = `${entry.id}-work-detail`;
-  const hasDetail = Boolean(entry.summary || (entry.bullets && entry.bullets.length > 0) || restStats.length > 0);
+  const rowRef = useRef<HTMLLIElement>(null);
+  const artImgRef = useRef<HTMLImageElement>(null);
+  const maskRectRef = useRef<SVGRectElement>(null);
 
-  const barClassName = [
-    "work-bar",
-    bar?.ongoing && "work-bar--ongoing",
-    !bar && "work-bar--fallback",
-  ]
+  const bar = computeBar(entry, domain);
+  const stats = entry.stats ?? [];
+  const detailId = `${entry.id}-work-detail`;
+  const hasDetail = Boolean(entry.summary || (entry.bullets && entry.bullets.length > 0) || stats.length > 0);
+  // Photo only floats while the row is actually open, and only for
+  // fine-pointer/motion-allowed visitors — otherwise no layer, no listener.
+  const showArt = artEnabled && Boolean(entry.image) && expanded;
+
+  const dateLabel = (entry.period && formatPeriodRange(entry.period)) || entry.date;
+  // Near the axis's right edge a label growing rightward from the bar's
+  // start would run off the track, so it flips to grow backward instead.
+  const dateFlipped = bar ? bar.leftPct > 80 : false;
+
+  const barClassName = ["work-bar", bar?.ongoing && "work-bar--ongoing", !bar && "work-bar--fallback"]
     .filter(Boolean)
     .join(" ");
 
@@ -122,8 +161,100 @@ function WorkRow({
     ? { left: `${bar.leftPct}%`, width: `max(${bar.widthPct}%, ${MIN_BAR_WIDTH})` }
     : undefined;
 
+  // Delegated-per-row pointer tracking, mirroring SectionBlock's cursor-art:
+  // written straight to CSS custom properties (not React state) so trailing
+  // the cursor never triggers a re-render.
+  useEffect(() => {
+    if (!showArt) return;
+    const row = rowRef.current;
+    if (!row) return;
+
+    function handlePointerMove(event: PointerEvent) {
+      const art = artImgRef.current;
+      if (!art || !row) return;
+      const rect = row.getBoundingClientRect();
+      const w = art.offsetWidth;
+      const h = art.offsetHeight;
+      const maskRect = maskRectRef.current;
+      if (maskRect && maskRect.getAttribute("width") !== String(w)) {
+        maskRect.setAttribute("width", String(w));
+        maskRect.setAttribute("height", String(h));
+      }
+      const halfW = w / 2;
+      const halfH = h / 2;
+      const x = clamp(event.clientX - rect.left, halfW, rect.width - halfW);
+      const y = clamp(event.clientY - rect.top, halfH, rect.height - halfH);
+      row.style.setProperty("--art-x", `${x}px`);
+      row.style.setProperty("--art-y", `${y}px`);
+      row.classList.add("work-row--art-active");
+    }
+
+    function handlePointerLeave() {
+      row?.classList.remove("work-row--art-active");
+    }
+
+    row.addEventListener("pointermove", handlePointerMove);
+    row.addEventListener("pointerleave", handlePointerLeave);
+    return () => {
+      row.removeEventListener("pointermove", handlePointerMove);
+      row.removeEventListener("pointerleave", handlePointerLeave);
+      row.classList.remove("work-row--art-active");
+    };
+  }, [showArt]);
+
   return (
-    <li className={`work-row${expanded ? " work-row--expanded" : ""}`}>
+    <li
+      className={`work-row${expanded ? " work-row--expanded" : ""}`}
+      ref={rowRef}
+      // On the LI (not the trigger button) so the row stays open while the
+      // pointer wanders down into the opened detail panel — bound to just
+      // the button, moving in to read the bullets (or follow the photo)
+      // would immediately collapse it again.
+      onMouseEnter={() => onExpand(entry.id)}
+      onMouseLeave={() => onCollapse(entry.id)}
+    >
+      {showArt && (
+        <>
+          {/* The mask rect is sized to the image in JS, exactly as
+              SectionBlock does: every photo has its own aspect ratio, so a
+              shared mask cannot line up with every row's edges. */}
+          <svg className="work-art-defs" aria-hidden="true">
+            <mask
+              id={`work-art-mask-${entry.id}`}
+              maskUnits="userSpaceOnUse"
+              x="-40"
+              y="-40"
+              width="2000"
+              height="2000"
+            >
+              <rect
+                ref={maskRectRef}
+                className="work-art-maskrect"
+                x="0"
+                y="0"
+                width="10"
+                height="10"
+                fill="#fff"
+                filter="url(#art-distort)"
+              />
+            </mask>
+          </svg>
+          <img
+            ref={artImgRef}
+            className="work-art"
+            src={entry.image}
+            alt=""
+            aria-hidden="true"
+            style={
+              {
+                mask: `url(#work-art-mask-${entry.id})`,
+                WebkitMask: `url(#work-art-mask-${entry.id})`,
+              } as React.CSSProperties
+            }
+          />
+        </>
+      )}
+
       <button
         type="button"
         className="work-row-trigger"
@@ -131,8 +262,6 @@ function WorkRow({
         aria-controls={hasDetail ? detailId : undefined}
         onFocus={() => onExpand(entry.id)}
         onBlur={() => onCollapse(entry.id)}
-        onMouseEnter={() => onExpand(entry.id)}
-        onMouseLeave={() => onCollapse(entry.id)}
       >
         <span className="work-row-logo">
           {entry.logo ? (
@@ -145,18 +274,22 @@ function WorkRow({
         <span className="work-row-main">
           <span className="work-row-head">
             <span className="work-row-role">{entry.role ?? entry.title}</span>
-            <span className="work-row-date">{entry.date}</span>
-            {headline && (
-              <span className="work-row-headline-stat">
-                <span className="work-row-headline-value tabular">
-                  <CountUp value={headline.value} prefix={headline.prefix} suffix={headline.suffix} />
-                </span>
-                <span className="work-row-headline-label">{headline.label}</span>
-              </span>
-            )}
+            {/* Visible only in the mobile stacked fallback, which has no
+                shared axis to hang the date on; desktop shows it over the
+                bar's own start instead (below), unless there's no bar to
+                anchor it to. */}
+            <span className={`work-row-date${!bar ? " work-row-date--visible" : ""}`}>{dateLabel}</span>
           </span>
 
           <span className="work-row-track">
+            {bar && (
+              <span
+                className={`work-row-bar-date${dateFlipped ? " work-row-bar-date--flip" : ""}`}
+                style={{ left: `${bar.leftPct}%` }}
+              >
+                {dateLabel}
+              </span>
+            )}
             <motion.span
               className={barClassName}
               style={barStyle}
@@ -181,9 +314,12 @@ function WorkRow({
                 ))}
               </ul>
             )}
-            {restStats.length > 0 && (
+            {stats.length > 0 && (
               <div className="work-detail-stats">
-                {restStats.map((stat, si) => (
+                {/* The first stat is the headline figure — it earns its
+                    position (the row's right-hand slot) but not a louder
+                    style; it reads as an ordinary stat tile like the rest. */}
+                {stats.map((stat, si) => (
                   <div className="work-detail-stat" key={`${stat.label}-${si}`}>
                     <span className="work-detail-stat-value tabular">
                       <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
@@ -212,6 +348,13 @@ export function WorkTimeline({ section }: { section: Section }) {
   const labelId = `${section.id}-label`;
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
+  // Fine-pointer + motion-allowed gate for the cursor-trailing photo,
+  // mirroring SectionBlock's own spotlight gate.
+  const artEnabled = useMemo(
+    () => !reduced && typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches,
+    [reduced]
+  );
+
   const domain = useMemo(() => computeDomain(section.entries), [section.entries]);
   const ticks = useMemo(() => yearTicks(domain), [domain]);
 
@@ -231,7 +374,6 @@ export function WorkTimeline({ section }: { section: Section }) {
         <SkewHeading id={labelId} className="section-label work-label">
           {section.label}
         </SkewHeading>
-        {section.blurb && <p className="work-blurb">{section.blurb}</p>}
 
         <Reveal as="div" className="work-chart">
           <div className="work-axis-row" aria-hidden="true">
@@ -263,6 +405,7 @@ export function WorkTimeline({ section }: { section: Section }) {
                   onExpand={expand}
                   onCollapse={collapse}
                   reduced={reduced}
+                  artEnabled={artEnabled}
                 />
               ))}
             </ul>

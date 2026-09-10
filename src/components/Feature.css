@@ -11,13 +11,6 @@
   margin-bottom: 10px;
 }
 
-.feature-blurb {
-  margin: 0 0 40px;
-  font-size: 20px;
-  font-weight: var(--fw-light);
-  color: var(--fg-dim);
-}
-
 /* ---------- panel ---------- */
 .feature-panel {
   position: relative;
@@ -38,8 +31,7 @@
    One large soft radial glow, centred just below the panel's bottom edge
    (so only its upper cap intersects the box), reads better than a flat
    linear gradient. No animation — scoped to the panel rectangle only; the
-   section label and blurb outside it stay on the page's normal white
-   ground.
+   section label outside it stays on the page's normal white ground.
 
    --fg / --fg-dim / --line / --line-soft are redeclared right here, so
    every child rule that already reads them (title, role, org, stats,

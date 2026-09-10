@@ -64,17 +64,15 @@ export type Section = {
   id: string;
   label: string;
   kind: SectionKind;
-  /** Short framing line under the label. */
-  blurb?: string;
   entries: Entry[];
 };
 
 export const profile = {
   name: "Raajvir Vijay",
   tagline: "Operations research, applied to motorsport.",
-  // Two deliberate lines — the hero reads better brief than complete.
+  // Two lines, carrying the three things worth leading with.
   lede:
-    "Industrial engineering at Northwestern.\nOperations Lead of its Formula Racing team.",
+    "Industrial engineering at Northwestern.\nOperations Lead of its Formula Racing team, founder of Somnia, and a published researcher.",
   location: "Evanston, IL, USA",
   email: "raajvir@u.northwestern.edu",
   phone: "(773) 942-1063",
@@ -102,16 +100,21 @@ export const heroSocials = [
 
 export const nav = [
   { label: "Work", href: "#work" },
+  { label: "Startup", href: "#startup" },
   { label: "Projects", href: "#projects" },
   { label: "Research", href: "#research" },
+  { label: "Education", href: "#education" },
+  { label: "Skills", href: "#skills" },
+  { label: "Awards", href: "#awards" },
   { label: "Journalism", href: "#journalism" },
+  { label: "References", href: "#references" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
 export const sections: Section[] = [
   {
     id: "work",
-    label: "COMPANY WORK",
+    label: "WORK EXPERIENCE",
     kind: "timeline",
     entries: [
       {
@@ -157,6 +160,25 @@ export const sections: Section[] = [
           "Led enterprise adoption of agentic AI tooling across the Data Science department.",
         ],
       },
+{
+        id: "polymarket",
+        period: { start: "2026-04", end: "2026-06" },
+        logo: "/assets/logos/polymarket.svg",
+        summary:
+          "A prediction market where people bet on real-world events. I researched where new users get stuck and redesigned that flow.",
+        href: "https://polymarket.com/",
+        image: "/assets/activities/polymarket.jpg",
+        title: "Polymarket",
+        org: "via Ascend Consulting Group",
+        role: "Analyst",
+        date: "Apr - Jun 2026",
+        tags: ["Consulting"],
+        bullets: [
+          "Engagement run through Ascend Consulting Group, Northwestern's student-led consulting organisation, which places project teams with external clients.",
+          "User research and UX wireframe prototyping; proposed activation-flow improvements.",
+          "Worked to a client brief on where new users drop out of the sign-up and first-trade flow.",
+        ],
+      },
       {
         id: "isvaryam",
         period: { start: "2025-06", end: "2025-08" },
@@ -193,30 +215,12 @@ export const sections: Section[] = [
           "Managed lead pipeline in CRM; followed up on inquiries and improved conversion tracking.",
         ],
       },
-      {
-        id: "polymarket",
-        period: { start: "2026-06", end: "2026-08" },
-        logo: "/assets/logos/polymarket.svg",
-        summary:
-          "A prediction market where people bet on real-world events. I researched where new users get stuck and redesigned that flow.",
-        href: "https://polymarket.com/",
-        image: "/assets/activities/polymarket.jpg",
-        title: "Polymarket",
-        org: "via Ascend Consulting Group",
-        role: "Analyst",
-        date: "Summer 2026",
-        tags: ["Consulting"],
-        bullets: [
-          "User research and UX wireframe prototyping; proposed activation-flow improvements.",
-        ],
-      },
     ],
   },
   {
     id: "startup",
     label: "STARTUP",
     kind: "feature",
-    blurb: "Building something people use.",
     entries: [
       {
         id: "somnia",
@@ -256,7 +260,6 @@ export const sections: Section[] = [
     id: "projects",
     label: "INDEPENDENT PROJECTS",
     kind: "grid",
-    blurb: "Questions I picked up on my own.",
     entries: [
       {
         id: "f1-atr",
@@ -302,7 +305,6 @@ export const sections: Section[] = [
     id: "research",
     label: "RESEARCH",
     kind: "papers",
-    blurb: "Supervised and published work.",
     entries: [
       {
         id: "netflix",
@@ -416,7 +418,6 @@ export const sections: Section[] = [
     id: "journalism",
     label: "JOURNALISM",
     kind: "media",
-    blurb: "Talking and writing about the sport.",
     entries: [
       {
         id: "six-cylinders",
@@ -549,7 +550,6 @@ export const contact = {
  */
 export const references = {
   label: "REFERENCES",
-  note: "Contact details on request, or on the CV.",
   entries: [
     { id: "puppa", name: "Andreas Puppa", role: "VP, Data Science, Kaizen Analytix", relation: "Former Employer" },
     { id: "gatchell", name: "Prof. David Gatchell", role: "Director, Manufacturing & Design Engineering, Northwestern", relation: "Professor" },

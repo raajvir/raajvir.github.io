@@ -23,7 +23,10 @@ export function Header() {
   );
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const next = Math.min(8, Math.max(1, Math.ceil(latest * 8)));
+    // floor+1, not ceil: ceil maps the whole of progress 0 to gear 0 (then
+    // clamped up to 1) and squeezes the low gears, so 2 barely appears.
+    // This gives eight even 12.5% bands, gear 1 from the very top.
+    const next = Math.min(8, Math.max(1, Math.floor(latest * 8) + 1));
     setGear(next);
   });
 
