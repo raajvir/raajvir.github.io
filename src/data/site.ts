@@ -42,11 +42,17 @@ export type Entry = {
   institution?: { name: string; logo?: string };
   /** Further reading beyond the main `href`. */
   extraLinks?: { label: string; href: string }[];
+  /**
+   * Explicit span for the timeline. `end: null` means ongoing. Kept separate
+   * from `date`, which stays the human-readable label.
+   */
+  period?: { start: string; end: string | null };
 };
 
 export type SectionKind =
   | "timing-tower"   // the classic entry list, F1 timing-tower styling
   | "feature"        // a single headline entry, given a panel of its own
+  | "timeline"       // roles as bars on a shared time axis
   | "papers"         // research, laid out like a citation list
   | "media"          // podcast + writing, one panel each
   | "grid"           // card grid, filterable
@@ -106,11 +112,11 @@ export const sections: Section[] = [
   {
     id: "work",
     label: "COMPANY WORK",
-    kind: "timing-tower",
-    blurb: "Paid roles, in industry.",
+    kind: "timeline",
     entries: [
       {
         id: "nfr",
+        period: { start: "2026-01", end: null },
         logo: "/assets/logos/nfr.png",
         summary:
           "Northwestern's student motorsport team — we design, build and race a single-seater car every season. I run the operations side of it.",
@@ -131,6 +137,7 @@ export const sections: Section[] = [
       },
       {
         id: "kaizen",
+        period: { start: "2026-06", end: "2026-08" },
         logo: "/assets/logos/kaizen.svg",
         summary:
           "An analytics consultancy. I built the pricing software that decides what a second-hand item should sell for, across a national US thrift chain.",
@@ -152,6 +159,7 @@ export const sections: Section[] = [
       },
       {
         id: "isvaryam",
+        period: { start: "2025-06", end: "2025-08" },
         logo: "/assets/logos/isvaryam.png",
         summary:
           "A cold-press cooking oil producer. I worked out how to get more oil out of the same seeds by changing the timing of the production run.",
@@ -169,6 +177,7 @@ export const sections: Section[] = [
       },
       {
         id: "toyota",
+        period: { start: "2024-06", end: "2024-08" },
         logo: "/assets/logos/toyota.png",
         summary:
           "A Toyota dealership. I sold new cars to customers on the showroom floor.",
@@ -186,6 +195,7 @@ export const sections: Section[] = [
       },
       {
         id: "polymarket",
+        period: { start: "2026-06", end: "2026-08" },
         logo: "/assets/logos/polymarket.svg",
         summary:
           "A prediction market where people bet on real-world events. I researched where new users get stuck and redesigned that flow.",
@@ -355,6 +365,7 @@ export const sections: Section[] = [
       },
           {
         id: "light-sleep",
+        image: "/assets/activities/light-sleep.svg",
         href: "https://ijip.in/articles/light-guided-sleep/",
         tags: ["Published"],
         institution: {

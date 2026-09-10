@@ -1,0 +1,354 @@
+.work-sec {
+  padding-bottom: 56px;
+}
+
+.work-label {
+  display: block;
+  margin-top: 46px;
+  margin-bottom: 44px;
+}
+
+.work-label:has(+ .work-blurb) {
+  margin-bottom: 10px;
+}
+
+.work-blurb {
+  margin: 0 0 34px;
+  font-size: 20px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- chart shell ---------- */
+.work-chart {
+  --work-gutter: 150px;
+  --work-gap: 20px;
+  margin-top: 8px;
+}
+
+/* ---------- axis ---------- */
+.work-axis-row {
+  display: flex;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.work-gutter {
+  flex: 0 0 var(--work-gutter);
+}
+
+.work-axis-track {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 15px;
+}
+
+.work-axis-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+.work-rows-wrap {
+  position: relative;
+}
+
+.work-gridlines {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--work-gutter);
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.work-gridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line-soft);
+  transform: translateX(-50%);
+}
+
+/* ---------- rows ---------- */
+.work-rows {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-row {
+  border-bottom: 1px solid var(--line);
+}
+
+.work-row-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--work-gap);
+  width: 100%;
+  padding: 16px 0;
+  text-align: left;
+}
+
+.work-row-logo {
+  flex: 0 0 var(--work-gutter);
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.work-row-logo img {
+  max-height: 40px;
+  width: auto;
+  max-width: calc(var(--work-gutter) - 10px);
+  object-fit: contain;
+  object-position: left center;
+}
+
+.work-row-logo-fallback {
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  overflow-wrap: break-word;
+}
+
+.work-row-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.work-row-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+
+.work-row-role {
+  font-size: 18px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.work-row-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+.work-row-headline-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.work-row-headline-value {
+  font-size: 20px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.work-row-headline-label {
+  font-size: 11px;
+  font-weight: var(--fw-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
+}
+
+.work-row-track {
+  position: relative;
+  height: 12px;
+  background: var(--line-soft);
+}
+
+.work-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--c-accent);
+  transform-origin: left center;
+}
+
+.work-bar--ongoing {
+  background: linear-gradient(to right, var(--c-accent) 72%, rgba(221, 38, 11, 0.2) 100%);
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
+}
+
+/* ---------- hover / focus feedback ---------- */
+.work-row-trigger:hover .work-row-role,
+.work-row-trigger:focus-visible .work-row-role {
+  color: var(--c-accent);
+}
+
+.work-row-trigger:hover .work-row-track,
+.work-row-trigger:focus-visible .work-row-track {
+  background: var(--line);
+}
+
+.work-row-trigger:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 4px;
+}
+
+/* ---------- detail (expands beneath the row) ---------- */
+.work-detail {
+  display: grid;
+  grid-template-rows: minmax(0, 0fr);
+  margin-left: calc(var(--work-gutter) + var(--work-gap));
+  transition: grid-template-rows 0.35s var(--ease-out);
+}
+
+.work-row--expanded .work-detail {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.work-detail-inner {
+  overflow: hidden;
+}
+
+.work-detail-location {
+  margin: 0 0 8px;
+  padding-top: 4px;
+  font-size: 13px;
+  color: var(--fg-dim);
+}
+
+.work-detail-summary {
+  margin: 4px 0 0;
+  max-width: 640px;
+  font-size: 17px;
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
+  color: var(--fg);
+}
+
+.work-detail-bullets {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  list-style: disc;
+  max-width: 640px;
+}
+
+.work-detail-bullets li {
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.work-detail-bullets li + li {
+  margin-top: 8px;
+}
+
+.work-detail-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin: 16px 0 22px;
+}
+
+.work-detail-stat-value {
+  font-size: 22px;
+  font-weight: var(--fw-light);
+  color: var(--fg);
+}
+
+.work-detail-stat-label {
+  display: block;
+  margin-top: 4px;
+  max-width: 130px;
+  font-size: 11px;
+  font-weight: var(--fw-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
+}
+
+/* ---------- responsive: tighten the chart before it breaks ---------- */
+@media (max-width: 1000px) {
+  .work-chart {
+    --work-gutter: 118px;
+  }
+
+  .work-row-role {
+    font-size: 16px;
+  }
+}
+
+/* ---------- responsive: stacked list below 700px ----------
+   No room for a shared axis at this width, so each role falls back to its
+   own compact card: logo, role, dates, headline stat, and a small bar whose
+   width alone (not position) shows how long the stint was. */
+@media (max-width: 700px) {
+  .work-chart {
+    --work-gutter: 64px;
+  }
+
+  .work-axis-row,
+  .work-gridlines {
+    display: none;
+  }
+
+  .work-row-trigger {
+    align-items: flex-start;
+    padding: 14px 0;
+  }
+
+  .work-row-logo {
+    flex-basis: var(--work-gutter);
+  }
+
+  .work-row-logo img {
+    max-height: 30px;
+  }
+
+  .work-row-headline-stat {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+
+  .work-row-track {
+    width: 55%;
+    max-width: 200px;
+  }
+
+  .work-bar {
+    left: 0 !important;
+  }
+
+  .work-detail {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .work-sec {
+    padding-bottom: 64px;
+  }
+
+  .work-row-role {
+    font-size: 15px;
+  }
+
+  .work-row-date {
+    font-size: 11px;
+  }
+}

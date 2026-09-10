@@ -1,4 +1,6 @@
-import { motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
 import type { Entry, Section } from "../data/site";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { SectionRule } from "./ui/SectionRule";
@@ -11,6 +13,125 @@ const COURSEWORK_PREFIX = "Coursework:";
 const CARD_DURATION = 0.8;
 const CARD_STAGGER = 0.16;
 const CARD_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+/** Physical-card tilt: how far it leans toward the pointer, and how it settles. */
+const TILT_MAX_DEG = 7;
+const TILT_SPRING = { stiffness: 150, damping: 18 };
+const TILT_REST_SCALE = 1;
+const TILT_HOVER_SCALE = 1.02;
+
+const COARSE_POINTER_QUERY = "(pointer: coarse)";
+
+/** True on touch/stylus-primary input, where a hover tilt has no honest gesture behind it. */
+function useCoarsePointer(): boolean {
+  const [coarse, setCoarse] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(COARSE_POINTER_QUERY).matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(COARSE_POINTER_QUERY);
+    const onChange = () => setCoarse(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return coarse;
+}
+
+/**
+ * Wraps a licence card so it behaves like a laminated object on a desk: it
+ * leans toward the pointer and carries a specular highlight that tracks the
+ * lean, both driven entirely through motion values (no per-frame React
+ * state) and eased back to flat with springs on pointer leave. Disabled
+ * outright — no listeners, no transform — for touch input and reduced
+ * motion, where the card stays flat with its static foil look.
+ */
+function TiltCard({ interactive, children }: { interactive: boolean; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const scale = useMotionValue(TILT_REST_SCALE);
+  const glareX = useMotionValue(50);
+  const glareY = useMotionValue(50);
+
+  const springRotateX = useSpring(rotateX, TILT_SPRING);
+  const springRotateY = useSpring(rotateY, TILT_SPRING);
+  const springScale = useSpring(scale, TILT_SPRING);
+  const springGlareX = useSpring(glareX, TILT_SPRING);
+  const springGlareY = useSpring(glareY, TILT_SPRING);
+
+  const glareXPercent = useMotionTemplate`${springGlareX}%`;
+  const glareYPercent = useMotionTemplate`${springGlareY}%`;
+
+  useEffect(() => {
+    if (!interactive) return;
+    const node = ref.current;
+    if (!node) return;
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const rect = node.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const px = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+      const py = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
+
+      rotateY.set((px - 0.5) * 2 * TILT_MAX_DEG);
+      rotateX.set(-(py - 0.5) * 2 * TILT_MAX_DEG);
+      glareX.set(px * 100);
+      glareY.set(py * 100);
+    };
+
+    const handlePointerEnter = () => {
+      scale.set(TILT_HOVER_SCALE);
+    };
+
+    const handlePointerLeave = () => {
+      rotateX.set(0);
+      rotateY.set(0);
+      scale.set(TILT_REST_SCALE);
+      glareX.set(50);
+      glareY.set(50);
+    };
+
+    node.addEventListener("pointermove", handlePointerMove);
+    node.addEventListener("pointerenter", handlePointerEnter);
+    node.addEventListener("pointerleave", handlePointerLeave);
+
+    return () => {
+      node.removeEventListener("pointermove", handlePointerMove);
+      node.removeEventListener("pointerenter", handlePointerEnter);
+      node.removeEventListener("pointerleave", handlePointerLeave);
+    };
+  }, [interactive, rotateX, rotateY, scale, glareX, glareY]);
+
+  if (!interactive) {
+    return <div className="cred-tilt">{children}</div>;
+  }
+
+  // Assigned to a variable (rather than written inline) so the custom
+  // `--cred-glare-*` properties don't trip the style prop's excess-property
+  // check — motion writes these straight to the DOM regardless of how
+  // narrowly its own style type is declared.
+  const tiltStyle = {
+    rotateX: springRotateX,
+    rotateY: springRotateY,
+    scale: springScale,
+    "--cred-glare-x": glareXPercent,
+    "--cred-glare-y": glareYPercent,
+  };
+
+  // The pointer math and hit-testing live on this outer, untransformed div —
+  // only the inner motion.div actually rotates. Measuring against the card
+  // that is itself tilting would chase its own moving hit-region (its
+  // rendered corners drift under 3D rotation) and never settle.
+  return (
+    <div ref={ref} className="cred-tilt">
+      <motion.div className="cred-tilt-interactive" style={tiltStyle}>
+        {children}
+      </motion.div>
+    </div>
+  );
+}
 
 type Field = { key: string; label: string; value: string };
 type Figure = { key: string; label: string; value: string };
@@ -70,7 +191,17 @@ function statusFor(entry: Entry): string {
   return /expected/i.test(entry.date) ? "In force" : "Cleared";
 }
 
-function LicenceCard({ entry, index, reduced }: { entry: Entry; index: number; reduced: boolean }) {
+function LicenceCard({
+  entry,
+  index,
+  reduced,
+  interactive,
+}: {
+  entry: Entry;
+  index: number;
+  reduced: boolean;
+  interactive: boolean;
+}) {
   const fields = fieldsFor(entry);
   const figures = figuresFor(entry);
   const finePrint = finePrintFor(entry);
@@ -81,7 +212,11 @@ function LicenceCard({ entry, index, reduced }: { entry: Entry; index: number; r
       {entry.image && (
         <div className="cred-licence-photo">
           <img src={entry.image} alt="" aria-hidden="true" loading="lazy" />
-          <span className="cred-licence-holo" aria-hidden="true" />
+          {interactive ? (
+            <span className="cred-tilt-sheen" aria-hidden="true" />
+          ) : (
+            <span className="cred-licence-holo" aria-hidden="true" />
+          )}
         </div>
       )}
 
@@ -133,19 +268,21 @@ function LicenceCard({ entry, index, reduced }: { entry: Entry; index: number; r
   if (reduced) {
     return (
       <li className="cred-licence">
-        {card}
-        {figures.length > 0 && (
-          <div className="cred-licence-scores">
-            {figures.map((figure) => (
-              <div className="cred-licence-score" key={figure.key}>
-                <span className="cred-licence-score-value tabular">{figure.value}</span>
-                <span className="cred-licence-score-label">{figure.label}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {finePrintNodes}
-        <span className="cred-licence-barcode" aria-hidden="true" />
+        <TiltCard interactive={interactive}>
+          {card}
+          {figures.length > 0 && (
+            <div className="cred-licence-scores">
+              {figures.map((figure) => (
+                <div className="cred-licence-score" key={figure.key}>
+                  <span className="cred-licence-score-value tabular">{figure.value}</span>
+                  <span className="cred-licence-score-label">{figure.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {finePrintNodes}
+          <span className="cred-licence-barcode" aria-hidden="true" />
+        </TiltCard>
       </li>
     );
   }
@@ -153,32 +290,34 @@ function LicenceCard({ entry, index, reduced }: { entry: Entry; index: number; r
   return (
     <motion.li
       className="cred-licence"
-      initial={{ clipPath: "inset(100% 0 0 0)" }}
-      whileInView={{ clipPath: "inset(0% 0 0 0)" }}
+      initial={{ clipPath: "inset(100% -4% -4% -4%)" }}
+      whileInView={{ clipPath: "inset(0% -4% -4% -4%)" }}
       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
       transition={{ duration: CARD_DURATION, delay, ease: CARD_EASE }}
     >
-      {card}
+      <TiltCard interactive={interactive}>
+        {card}
 
-      {figures.length > 0 && (
-        <motion.div
-          className="cred-licence-scores"
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-          transition={{ duration: 0.4, delay: delay + CARD_DURATION, ease: "easeOut" }}
-        >
-          {figures.map((figure) => (
-            <div className="cred-licence-score" key={figure.key}>
-              <span className="cred-licence-score-value tabular">{figure.value}</span>
-              <span className="cred-licence-score-label">{figure.label}</span>
-            </div>
-          ))}
-        </motion.div>
-      )}
+        {figures.length > 0 && (
+          <motion.div
+            className="cred-licence-scores"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+            transition={{ duration: 0.4, delay: delay + CARD_DURATION, ease: "easeOut" }}
+          >
+            {figures.map((figure) => (
+              <div className="cred-licence-score" key={figure.key}>
+                <span className="cred-licence-score-value tabular">{figure.value}</span>
+                <span className="cred-licence-score-label">{figure.label}</span>
+              </div>
+            ))}
+          </motion.div>
+        )}
 
-      {finePrintNodes}
-      <span className="cred-licence-barcode" aria-hidden="true" />
+        {finePrintNodes}
+        <span className="cred-licence-barcode" aria-hidden="true" />
+      </TiltCard>
     </motion.li>
   );
 }
@@ -192,6 +331,8 @@ function LicenceCard({ entry, index, reduced }: { entry: Entry; index: number; r
  */
 export function Credentials({ section }: { section: Section }) {
   const reduced = usePrefersReducedMotion();
+  const coarse = useCoarsePointer();
+  const interactive = !reduced && !coarse;
   const labelId = `${section.id}-label`;
 
   return (
@@ -205,7 +346,7 @@ export function Credentials({ section }: { section: Section }) {
 
         <ul className="cred-grid">
           {section.entries.map((entry, i) => (
-            <LicenceCard entry={entry} index={i} reduced={reduced} key={entry.id} />
+            <LicenceCard entry={entry} index={i} reduced={reduced} interactive={interactive} key={entry.id} />
           ))}
         </ul>
       </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { SectionBlock } from "./components/SectionBlock";
+import { WorkTimeline } from "./components/WorkTimeline";
 import { ProjectGrid } from "./components/ProjectGrid";
 import { Feature } from "./components/Feature";
 import { ResearchList } from "./components/ResearchList";
@@ -23,6 +24,8 @@ import type { Section } from "./data/site";
 /** Each section picks its renderer from the `kind` declared in the data. */
 function renderSection(section: Section) {
   switch (section.kind) {
+    case "timeline":
+      return <WorkTimeline key={section.id} section={section} />;
     case "grid":
       return <ProjectGrid key={section.id} section={section} />;
     case "feature":

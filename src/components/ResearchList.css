@@ -20,138 +20,112 @@
   color: var(--fg-dim);
 }
 
-/* ---------- citation list ---------- */
-.research-list {
-  display: flex;
-  flex-direction: column;
+/* ---------- grid ---------- */
+.research-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
   margin: 0;
   padding: 0;
 }
 
-.research-row {
-  /* Equal padding above and below so the rule sits exactly halfway between
-     two entries rather than hugging the one above it. */
-  padding-top: 48px;
-  padding-bottom: 48px;
-  border-top: 1px solid var(--line-soft);
+@media (min-width: 1000px) {
+  .research-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 32px;
+  }
 }
 
-.research-row:first-child {
-  padding-top: 0;
-  border-top: 0;
+.research-card-item {
+  list-style: none;
 }
 
-.research-row:last-child {
-  padding-bottom: 0;
-}
-
-.research-row-grid {
-  display: grid;
-  grid-template-columns: 86px 1fr auto;
-  column-gap: 24px;
-  row-gap: 10px;
-  align-items: start;
-}
-
-/* ---------- rail: index numeral + institution crest ---------- */
-.research-rail {
-  grid-area: rail;
+/* ---------- card: reads as a paper's first page ---------- */
+.research-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-self: start;
-  width: 86px;
-  gap: 9px;
-  text-align: center;
+  height: 100%;
+  padding: 36px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
 }
 
-.research-index {
-  font-family: var(--font-mono);
-  font-size: 28px;
-  font-weight: var(--fw-regular);
-  line-height: 1;
-  color: var(--line);
-  letter-spacing: 0.02em;
+.research-card:hover {
+  border-color: var(--c-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
 }
 
-.research-mark {
+/* ---------- masthead: crest + institution name, date + published stamp ---------- */
+.research-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.research-inst {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 34px;
+  gap: 10px;
+  min-width: 0;
 }
 
-.research-logo {
-  height: 34px;
+.research-crest {
+  flex: 0 0 auto;
+  height: 26px;
+  display: flex;
+  align-items: center;
+}
+
+.research-crest-img {
+  height: 26px;
   width: auto;
-  max-width: 86px;
+  max-width: 64px;
   object-fit: contain;
   display: block;
 }
 
-.research-mark-fallback {
-  width: 34px;
-  height: 34px;
+.research-crest-fallback {
+  width: 26px;
+  height: 26px;
   border: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 9px;
   color: var(--fg-dim);
   letter-spacing: 0.02em;
 }
 
 .research-inst-name {
-  max-width: 86px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: var(--fw-light);
-  line-height: 1.3;
+  line-height: 1.25;
   color: var(--fg-dim);
   overflow-wrap: break-word;
 }
 
-/* ---------- heading: title + published badge ---------- */
-.research-heading {
-  grid-area: heading;
+.research-card-meta {
+  flex: 0 0 auto;
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
 }
 
-.research-title {
-  margin: 0;
-  font-size: var(--fs-title);
+.research-date {
+  font-size: 13px;
   font-weight: var(--fw-light);
-  color: var(--fg);
-  line-height: 1.15;
-  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
-}
-
-.research-row:hover .research-title {
-  color: var(--c-accent);
-  transform: translateX(6px);
-}
-
-.research-title-link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  color: inherit;
-}
-
-.research-title-arrow {
-  display: inline-block;
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-
-.research-title-link:hover .research-title-arrow {
-  transform: translateX(4px);
+  color: var(--fg-dim);
+  white-space: nowrap;
 }
 
 .research-badge {
-  align-self: center;
   padding: 3px 7px;
   border: 1px solid var(--c-accent);
   font-size: 9px;
@@ -163,88 +137,139 @@
   white-space: nowrap;
 }
 
-/* ---------- date ---------- */
-.research-date {
-  grid-area: date;
-  justify-self: end;
-  align-self: start;
-  font-size: var(--fs-title);
-  font-weight: var(--fw-light);
-  color: var(--fg);
-  text-align: right;
-  white-space: nowrap;
+/* ---------- title block: centred, like a paper's masthead ---------- */
+.research-titleblock {
+  text-align: center;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--line-soft);
 }
 
-/* ---------- role / org ---------- */
-.research-role-block {
-  grid-area: role;
-}
-
-.research-role {
+.research-title {
   margin: 0;
-  font-size: var(--fs-role);
+  font-size: calc(var(--fs-title) * 0.83);
   font-weight: var(--fw-light);
+  line-height: 1.2;
   color: var(--fg);
 }
 
-.research-role + .research-role {
-  margin-top: 4px;
+.research-title-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: inherit;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
-.research-org {
+.research-title-link:hover {
+  color: var(--c-accent);
+}
+
+.research-title-arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.research-title-link:hover .research-title-arrow {
+  transform: translateX(4px);
+}
+
+.research-byline {
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: var(--fw-light);
   color: var(--fg-dim);
 }
 
-/* ---------- stats ---------- */
+.research-org {
+  margin-top: 2px;
+}
+
+/* ---------- abstract ---------- */
+.research-abstract {
+  margin-bottom: 24px;
+}
+
+.research-abstract-text {
+  margin: 0;
+  max-width: 46em;
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
+  color: var(--fg);
+}
+
+/* ---------- figure: the piece that makes it read as a paper ---------- */
+.research-figure {
+  margin: 0 0 24px;
+}
+
+.research-figure-frame {
+  display: block;
+  aspect-ratio: 8 / 5;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: #f2f2f3;
+}
+
+.research-figure-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.research-figure-caption {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+  text-align: center;
+}
+
+/* ---------- stats: a compact figure line ---------- */
 .research-stats {
-  grid-area: stats;
   display: flex;
   flex-wrap: wrap;
-  gap: 28px;
+  gap: 24px;
+  padding: 14px 0;
+  margin-bottom: 24px;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .research-stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .research-stat-value {
   font-family: var(--font-mono);
-  font-size: 20px;
+  font-size: 18px;
   color: var(--fg);
   font-variant-numeric: tabular-nums;
 }
 
 .research-stat-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: var(--fw-regular);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--fg-dim);
 }
 
-/* ---------- summary + bullets ---------- */
-.research-summary {
-  grid-area: summary;
-  margin: 0;
-  max-width: 680px;
-  font-size: var(--fs-lede);
-  font-weight: var(--fw-light);
-  line-height: var(--lh-body);
-  color: var(--fg);
-}
-
+/* ---------- body: bullets ---------- */
 .research-bullets {
-  grid-area: bullets;
   margin: 0;
-  padding-left: 22px;
-  max-width: 680px;
+  padding-left: 18px;
   list-style: disc;
+  flex: 1 0 auto;
 }
 
 .research-bullets li {
-  font-size: 17px;
+  font-size: 14px;
   font-weight: var(--fw-light);
   line-height: 1.5;
   color: var(--fg);
@@ -254,72 +279,60 @@
   margin-top: 8px;
 }
 
-/* ---------- responsive: single column below 700px ---------- */
-@media (max-width: 700px) {
-  .research-row-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .research-rail {
-    flex-direction: row;
-    justify-self: auto;
-    width: auto;
-    align-items: center;
-    gap: 12px;
-    text-align: left;
-    order: 1;
-  }
-
-  .research-inst-name {
-    max-width: none;
-    text-align: left;
-  }
-
-  .research-heading {
-    order: 2;
-  }
-
-  .research-date {
-    order: 3;
-    justify-self: start;
-    align-self: auto;
-    text-align: left;
-  }
-
-  .research-role-block {
-    order: 4;
-  }
-
-  .research-stats {
-    order: 5;
-  }
-
-  .research-summary {
-    order: 6;
-  }
-
-  .research-bullets {
-    order: 7;
-  }
+/* ---------- foot: extra links ---------- */
+.research-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 20px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-soft);
 }
 
+.research-extra-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.03em;
+  color: var(--fg-dim);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.research-extra-link:hover {
+  color: var(--c-accent);
+}
+
+.research-extra-link .research-title-arrow {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.research-extra-link:hover .research-title-arrow {
+  transform: translateX(4px);
+}
+
+/* ---------- responsive ---------- */
 @media (max-width: 600px) {
   .research-sec {
     padding-bottom: 64px;
   }
 
-  .research-row {
-    padding-top: 36px;
+  .research-card {
+    padding: 24px;
   }
 
-  .research-index {
-    font-size: 22px;
+  .research-title {
+    font-size: calc(var(--fs-title) * 0.9);
+  }
+}
+
+@media (max-width: 360px) {
+  .research-card-header {
+    flex-wrap: wrap;
   }
 
-  .research-stats {
-    gap: 20px;
+  .research-card-meta {
+    align-items: flex-start;
   }
 }
