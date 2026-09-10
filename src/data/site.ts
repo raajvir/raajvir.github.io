@@ -332,7 +332,7 @@ export const sections: Section[] = [
       },
       {
         id: "alphabeta",
-        institution: { name: "Alpha Beta Investments" },
+        institution: { name: "Alpha Beta Investments", logo: "/assets/logos/alphabeta.png" },
         summary:
           "A machine-learning model that estimates how risky an investment portfolio is before you put money into it.",
         image: "/assets/activities/alphabeta.svg",
