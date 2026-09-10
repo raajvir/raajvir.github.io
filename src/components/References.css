@@ -1,3 +1,4 @@
+/* ---------- section shell (must match every other section) ---------- */
 .refs {
   padding-bottom: 56px;
 }
@@ -9,37 +10,124 @@
 
 .refs-note {
   margin-top: 10px;
+  margin-bottom: 48px;
   font-size: 16px;
   font-weight: var(--fw-light);
   color: var(--fg-dim);
   max-width: 46em;
 }
 
-/* ---------- grid ---------- */
-.refs-grid {
-  margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+/* ---------- pit wall ----------
+   A rail runs the width of the section (the wall itself). Each referee is a
+   station on it: a signal drops from the rail to a small dark readout that
+   names their relation as a "channel", with a nameplate underneath naming
+   who is actually on the line. */
+.refs-wall {
+  position: relative;
 }
 
-.refs-item {
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
+.refs-rail {
+  height: 3px;
+  width: 100%;
+  background: var(--c-accent);
+}
+
+.refs-stations {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 48px;
+  margin: 0;
+  padding: 0;
+}
+
+.refs-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(170px, 26vw, 240px);
+}
+
+.refs-mobile-marker {
+  display: none;
+}
+
+.refs-connector {
+  display: block;
+  width: 2px;
+  background: var(--c-accent);
+  will-change: height;
+}
+
+.refs-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* ---------- screen (the readout mounted at the end of the drop) ---------- */
+.refs-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 16px 16px;
+  background: var(--fg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.refs-screen-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.refs-led {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  background: var(--c-green);
+  animation: refs-led-pulse 2.2s var(--ease-in-out) infinite;
+}
+
+@keyframes refs-led-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.refs-channel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .refs-relation {
-  display: block;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: var(--fw-bold);
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.08em;
   color: var(--c-accent);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ---------- plate (the person actually on the channel) ---------- */
+.refs-plate {
+  display: block;
+  margin-top: 16px;
+  text-align: center;
 }
 
 .refs-name {
   display: block;
-  margin-top: 8px;
   font-size: var(--fs-role);
   font-weight: var(--fw-light);
   color: var(--fg);
@@ -48,21 +136,68 @@
 .refs-role {
   display: block;
   margin-top: 6px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: var(--fw-light);
   line-height: 1.4;
   color: var(--fg-dim);
 }
 
-/* ---------- responsive ---------- */
-@media (max-width: 900px) {
-  .refs-grid {
-    grid-template-columns: 1fr;
+/* ---------- responsive: rail collapses, stations become rows ---------- */
+@media (max-width: 700px) {
+  .refs-rail {
+    display: none;
+  }
+
+  .refs-stations {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 26px;
+  }
+
+  .refs-station {
+    width: auto;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .refs-mobile-marker {
+    display: block;
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    margin-top: 4px;
+    background: var(--c-accent);
+  }
+
+  .refs-connector {
+    display: none;
+  }
+
+  .refs-content {
+    align-items: flex-start;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .refs-screen {
+    align-items: flex-start;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .refs-relation,
+  .refs-plate {
+    text-align: left;
   }
 }
 
 @media (max-width: 600px) {
   .refs {
     padding-bottom: 44px;
+  }
+
+  .refs-note {
+    margin-bottom: 36px;
   }
 }

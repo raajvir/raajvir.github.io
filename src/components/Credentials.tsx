@@ -1,74 +1,192 @@
-import type React from "react";
-import { useEffect, useRef } from "react";
-import type { Section } from "../data/site";
+import { motion } from "motion/react";
+import type { Entry, Section } from "../data/site";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
-import { Reveal } from "./ui/Reveal";
 import { SectionRule } from "./ui/SectionRule";
 import { SkewHeading } from "./ui/SkewHeading";
 import "./Credentials.css";
 
 const COURSEWORK_PREFIX = "Coursework:";
 
-type Chip = { key: string; text: string };
+/** One growth beat per card, P3-then-P1 style staggering from the podium. */
+const CARD_DURATION = 0.8;
+const CARD_STAGGER = 0.16;
+const CARD_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-function chipsFor(entry: Section["entries"][number]): Chip[] {
-  const chips: Chip[] = [];
+type Field = { key: string; label: string; value: string };
+type Figure = { key: string; label: string; value: string };
 
-  entry.stats?.forEach((stat, i) => {
-    const value = stat.value.toFixed(1);
-    chips.push({ key: `stat-${i}`, text: `${stat.label} ${stat.prefix ?? ""}${value}${stat.suffix ?? ""}` });
-  });
-
-  entry.bullets
-    ?.filter((bullet) => !bullet.startsWith(COURSEWORK_PREFIX))
-    .forEach((bullet, i) => chips.push({ key: `bullet-${i}`, text: bullet }));
-
-  return chips;
+/** Role / location / date, read the way a licence card reads its own fields. */
+function fieldsFor(entry: Entry): Field[] {
+  const fields: Field[] = [];
+  if (entry.role) fields.push({ key: "class", label: "Class", value: entry.role });
+  if (entry.location) fields.push({ key: "issued", label: "Issued at", value: entry.location });
+  if (entry.date) fields.push({ key: "valid", label: "Valid", value: entry.date });
+  return fields;
 }
 
 /**
- * Education rendered as "super-licence" credential cards. Bullets and stats
- * both flatten into the same row of badge chips, except a coursework line
- * (too long to read as a chip) which drops to a full-width line instead.
+ * The one substantive number (or two) per school, read out of the resume's
+ * own stats/bullets rather than hand-typed twice. A stat becomes a figure
+ * outright; a "Label: value" bullet becomes one too, provided it isn't the
+ * coursework line (too long to read as a headline figure).
+ */
+function figuresFor(entry: Entry): Figure[] {
+  const figures: Figure[] = [];
+
+  entry.stats?.forEach((stat, i) => {
+    const value = stat.value.toFixed(2);
+    figures.push({
+      key: `stat-${i}`,
+      label: stat.label.toUpperCase(),
+      value: `${stat.prefix ?? ""}${value}${stat.suffix ?? ""}`,
+    });
+  });
+
+  entry.bullets?.forEach((bullet, i) => {
+    if (bullet.startsWith(COURSEWORK_PREFIX)) return;
+    const split = bullet.indexOf(":");
+    if (split === -1) return;
+    figures.push({
+      key: `bullet-${i}`,
+      label: bullet.slice(0, split).trim().toUpperCase(),
+      value: bullet.slice(split + 1).trim(),
+    });
+  });
+
+  return figures;
+}
+
+function finePrintFor(entry: Entry): string[] {
+  return entry.bullets?.filter((bullet) => bullet.startsWith(COURSEWORK_PREFIX)) ?? [];
+}
+
+/** "Expected Class of '29" reads as in-force; a past class year reads as cleared. */
+function statusFor(entry: Entry): string {
+  return /expected/i.test(entry.date) ? "In force" : "Cleared";
+}
+
+function LicenceCard({ entry, index, reduced }: { entry: Entry; index: number; reduced: boolean }) {
+  const fields = fieldsFor(entry);
+  const figures = figuresFor(entry);
+  const finePrint = finePrintFor(entry);
+  const delay = index * CARD_STAGGER;
+
+  const card = (
+    <div className="cred-licence-card">
+      {entry.image && (
+        <div className="cred-licence-photo">
+          <img src={entry.image} alt="" aria-hidden="true" loading="lazy" />
+          <span className="cred-licence-holo" aria-hidden="true" />
+        </div>
+      )}
+
+      <div className="cred-licence-main">
+        <div className="cred-licence-topline">
+          <span className="cred-licence-kicker">Student Super Licence</span>
+          <span className="cred-licence-status">{statusFor(entry)}</span>
+          <span className="cred-licence-no">No. {String(index + 1).padStart(2, "0")}</span>
+        </div>
+
+        <div className="cred-licence-heading">
+          <h3 className="cred-licence-title">
+            {entry.href ? (
+              <a className="cred-licence-title-link" href={entry.href} target="_blank" rel="noopener noreferrer">
+                {entry.title}
+                <span className="cred-licence-title-arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            ) : (
+              entry.title
+            )}
+          </h3>
+          {entry.logo && <img className="cred-licence-seal" src={entry.logo} alt="" aria-hidden="true" />}
+        </div>
+
+        {entry.org && <p className="cred-licence-org">{entry.org}</p>}
+
+        {fields.length > 0 && (
+          <dl className="cred-licence-fields">
+            {fields.map((field) => (
+              <div className="cred-licence-field" key={field.key}>
+                <dt>{field.label}</dt>
+                <dd>{field.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </div>
+    </div>
+  );
+
+  const finePrintNodes = finePrint.map((line, i) => (
+    <p className="cred-licence-fine" key={`fine-${i}`}>
+      {line}
+    </p>
+  ));
+
+  if (reduced) {
+    return (
+      <li className="cred-licence">
+        {card}
+        {figures.length > 0 && (
+          <div className="cred-licence-scores">
+            {figures.map((figure) => (
+              <div className="cred-licence-score" key={figure.key}>
+                <span className="cred-licence-score-value tabular">{figure.value}</span>
+                <span className="cred-licence-score-label">{figure.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {finePrintNodes}
+        <span className="cred-licence-barcode" aria-hidden="true" />
+      </li>
+    );
+  }
+
+  return (
+    <motion.li
+      className="cred-licence"
+      initial={{ clipPath: "inset(100% 0 0 0)" }}
+      whileInView={{ clipPath: "inset(0% 0 0 0)" }}
+      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      transition={{ duration: CARD_DURATION, delay, ease: CARD_EASE }}
+    >
+      {card}
+
+      {figures.length > 0 && (
+        <motion.div
+          className="cred-licence-scores"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+          transition={{ duration: 0.4, delay: delay + CARD_DURATION, ease: "easeOut" }}
+        >
+          {figures.map((figure) => (
+            <div className="cred-licence-score" key={figure.key}>
+              <span className="cred-licence-score-value tabular">{figure.value}</span>
+              <span className="cred-licence-score-label">{figure.label}</span>
+            </div>
+          ))}
+        </motion.div>
+      )}
+
+      {finePrintNodes}
+      <span className="cred-licence-barcode" aria-hidden="true" />
+    </motion.li>
+  );
+}
+
+/**
+ * Education rendered as F1 student "super licence" cards: the campus photo
+ * as the ID panel, the grades as the headline figures, the rest as the
+ * fields a real licence carries — issuing class, location, validity. Each
+ * card grows into view from the baseline, the same idea as the podium's
+ * blocks, before its figures settle in.
  */
 export function Credentials({ section }: { section: Section }) {
   const reduced = usePrefersReducedMotion();
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  // One delegated listener rather than a handler per card, so the art layer
-  // can stay pointer-events:none and never swallow a click on the card link.
-  useEffect(() => {
-    if (reduced) return;
-    const grid = gridRef.current;
-    if (!grid) return;
-
-    const onMove = (event: PointerEvent) => {
-      const target = event.target as HTMLElement | null;
-      const card = target?.closest<HTMLElement>(".cred-card--has-art");
-      const art = card?.querySelector<HTMLElement>(".cred-art");
-      if (!art || !card) return;
-      // Clamp the card's centre so it never leaves the row. Its size follows
-      // the image's own aspect ratio, so it has to be measured.
-      const r = card.getBoundingClientRect();
-      const w = art.offsetWidth;
-      const h = art.offsetHeight;
-      const maskRect = card.querySelector<SVGRectElement>(".cred-art-maskrect");
-      if (maskRect && maskRect.getAttribute("width") !== String(w)) {
-        maskRect.setAttribute("width", String(w));
-        maskRect.setAttribute("height", String(h));
-      }
-      const halfW = w / 2;
-      const halfH = h / 2;
-      const x = Math.min(Math.max(event.clientX - r.left, halfW), r.width - halfW);
-      const y = Math.min(Math.max(event.clientY - r.top, halfH), r.height - halfH);
-      art.style.setProperty("--art-x", `${x}px`);
-      art.style.setProperty("--art-y", `${y}px`);
-    };
-
-    grid.addEventListener("pointermove", onMove);
-    return () => grid.removeEventListener("pointermove", onMove);
-  }, [reduced]);
-
   const labelId = `${section.id}-label`;
 
   return (
@@ -80,101 +198,11 @@ export function Credentials({ section }: { section: Section }) {
         </SkewHeading>
         {section.blurb && <p className="cred-blurb">{section.blurb}</p>}
 
-        <div className="cred-grid" ref={gridRef}>
-          {section.entries.map((entry, i) => {
-            const chips = chipsFor(entry);
-            const coursework = entry.bullets?.filter((bullet) => bullet.startsWith(COURSEWORK_PREFIX));
-
-            return (
-              <Reveal
-                as="div"
-                index={reduced ? 0 : i}
-                key={entry.id}
-                className={`cred-card${entry.image ? " cred-card--has-art" : ""}`}
-              >
-                {entry.image && !reduced && (
-                  <>
-                    <svg className="cred-art-defs" aria-hidden="true">
-                      <mask
-                        id={`cred-art-mask-${entry.id}`}
-                        maskUnits="userSpaceOnUse"
-                        x="-40"
-                        y="-40"
-                        width="2000"
-                        height="2000"
-                      >
-                        <rect
-                          className="cred-art-maskrect"
-                          x="0"
-                          y="0"
-                          width="10"
-                          height="10"
-                          fill="#fff"
-                          filter="url(#art-distort)"
-                        />
-                      </mask>
-                    </svg>
-                    <img
-                      className="cred-art"
-                      src={entry.image}
-                      alt=""
-                      aria-hidden="true"
-                      style={
-                        {
-                          mask: `url(#cred-art-mask-${entry.id})`,
-                          WebkitMask: `url(#cred-art-mask-${entry.id})`,
-                        } as React.CSSProperties
-                      }
-                    />
-                  </>
-                )}
-                <span className="cred-bar" aria-hidden="true" />
-
-                <div className="cred-head">
-                  <div className="cred-heading">
-                    <h3 className="cred-title">
-                      {entry.href ? (
-                        <a
-                          className="cred-title-link"
-                          href={entry.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {entry.title}
-                          <span className="cred-title-arrow" aria-hidden="true">
-                            ↗
-                          </span>
-                        </a>
-                      ) : (
-                        entry.title
-                      )}
-                    </h3>
-                    {entry.org && <p className="cred-org">{entry.org}</p>}
-                    {entry.role && <p className="cred-role">{entry.role}</p>}
-                    {entry.location && <p className="cred-location">{entry.location}</p>}
-                  </div>
-                  <p className="cred-date">{entry.date}</p>
-                </div>
-
-                {chips.length > 0 && (
-                  <div className="cred-chips">
-                    {chips.map((chip) => (
-                      <span className="cred-chip" key={chip.key}>
-                        {chip.text}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {coursework?.map((line, i) => (
-                  <p className="cred-coursework" key={`coursework-${i}`}>
-                    {line}
-                  </p>
-                ))}
-              </Reveal>
-            );
-          })}
-        </div>
+        <ul className="cred-grid">
+          {section.entries.map((entry, i) => (
+            <LicenceCard entry={entry} index={i} reduced={reduced} key={entry.id} />
+          ))}
+        </ul>
       </div>
     </section>
   );

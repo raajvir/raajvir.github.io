@@ -436,13 +436,15 @@
    the case, strap and crown moving together as one rigid assembly. */
 .feature-watch {
   position: absolute;
-  /* Clear of the phone's own controls — it overlaps the lower-right
-     CORNER, not the 8/12-min buttons. */
-  right: -3.4em;
-  bottom: -2.4em;
+  /* The phone's controls occupy its lower-left and the text column starts
+     only ~60px past its right edge, so the watch cannot sit beside them.
+     It drops BELOW the buttons instead, overlapping the phone's bottom-right
+     corner and hanging past the lower edge. */
+  right: -1.6em;
+  bottom: -6.2em;
   z-index: 4;
-  width: 6.4em;
-  height: 12.5em;
+  width: 3.95em;
+  height: 7.7em;
   transform: rotate(-6deg);
   filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.4)) drop-shadow(0 3px 7px rgba(0, 0, 0, 0.28));
 }
