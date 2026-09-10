@@ -165,6 +165,26 @@
  * this wrapper's contents (the helmet) inside the spotlight circle and keeps
  * them visible outside it, revealing the portrait underneath.
  */
+/* Distorted copy of the portrait, painted only inside the reveal circle so
+   the face ripples under the cursor while the rest of the figure is still. */
+.hero-portrait__face {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  filter: url(#face-distort);
+  -webkit-mask: url(#helmet-face);
+  mask: url(#helmet-face);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-portrait__face { display: none; }
+}
+
 .hero-portrait__helmet-wrap {
   position: absolute;
   inset: 0;

@@ -100,14 +100,7 @@ function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
 
       <div className="proj-top">
         <span className="proj-date">{entry.date}</span>
-        {fastest && (
-          <span
-            className="proj-fastest-badge"
-            title="In F1 timing, purple marks the fastest lap of the session."
-          >
-            Fastest lap
-          </span>
-        )}
+        {fastest && <span className="sr-only">Fastest lap</span>}
       </div>
 
       <h3 className="proj-title">{entry.title}</h3>
@@ -194,6 +187,7 @@ function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
             width="100%"
             height="100%"
             preserveAspectRatio="xMidYMid meet"
+            filter="url(#art-distort-soft)"
             mask={`url(#${maskId})`}
           />
         </svg>

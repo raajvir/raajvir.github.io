@@ -102,6 +102,7 @@ export function Hero({ launched }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const figureRef = useRef<HTMLElement>(null);
   const holeRef = useRef<SVGCircleElement>(null);
+  const faceRef = useRef<SVGCircleElement>(null);
   const helmetRef = useRef<HTMLImageElement>(null);
 
   const [coarse, setCoarse] = useState(
@@ -128,12 +129,16 @@ export function Hero({ launched }: Props) {
   // filter, so the ripple is in the boundary and the helmet stays sharp.
   useMotionValueEvent(springX, "change", (latest) => {
     holeRef.current?.setAttribute("cx", String(latest));
+    faceRef.current?.setAttribute("cx", String(latest));
   });
   useMotionValueEvent(springY, "change", (latest) => {
     holeRef.current?.setAttribute("cy", String(latest));
+    faceRef.current?.setAttribute("cy", String(latest));
   });
   useMotionValueEvent(spotR, "change", (latest) => {
-    holeRef.current?.setAttribute("r", String(Math.max(0, latest)));
+    const r = String(Math.max(0, latest));
+    holeRef.current?.setAttribute("r", r);
+    faceRef.current?.setAttribute("r", r);
   });
 
   // Fine-pointer / mouse: track the cursor across the whole hero so the beam
@@ -300,8 +305,37 @@ export function Hero({ launched }: Props) {
                   filter="url(#art-distort)"
                 />
               </mask>
+              {/* Inverse of the hole: shows only INSIDE the circle, so a
+                  distorted copy of the portrait can sit in the reveal. */}
+              <mask
+                id="helmet-face"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="2000"
+                height="2000"
+              >
+                <rect x="0" y="0" width="2000" height="2000" fill="#000" />
+                <circle
+                  ref={faceRef}
+                  cx="200"
+                  cy="150"
+                  r="0"
+                  fill="#fff"
+                  filter="url(#art-distort)"
+                />
+              </mask>
             </defs>
           </svg>
+          {/* Distorted portrait, clipped to the reveal. Sits above the crisp
+              base image and below the helmet, so only the face inside the
+              circle moves. */}
+          <img
+            src="/assets/portrait.jpg"
+            alt=""
+            aria-hidden="true"
+            className="hero-portrait__face"
+          />
           <div className="hero-portrait__helmet-wrap">
             <img ref={helmetRef} src="/assets/helmet.png" alt="" className="hero-portrait__helmet" />
           </div>

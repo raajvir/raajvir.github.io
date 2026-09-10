@@ -36,6 +36,8 @@ export type Entry = {
   tags?: string[];
   /** Background art revealed under the cursor spotlight. */
   image?: string;
+  /** Company mark shown beside the heading. */
+  logo?: string;
 };
 
 export type SectionKind =
@@ -86,8 +88,8 @@ export const heroSocials = [
 
 export const nav = [
   { label: "Motorsport", href: "#motorsport" },
-  { label: "Work", href: "#experience" },
-  { label: "Research", href: "#projects" },
+  { label: "Work", href: "#work" },
+  { label: "Research", href: "#research" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
@@ -118,27 +120,6 @@ export const sections: Section[] = [
         ],
       },
       {
-        id: "f1-atr",
-        summary:
-          "Formula 1 caps how much aerodynamic testing each team is allowed. This study asks whether that cap actually changes who ends up fastest.",
-        image: "/assets/activities/f1-atr.svg",
-        title: "f1-atr",
-        role: "Independent Research — F1 Aerodynamic Testing Restrictions",
-        date: "2026",
-        stats: [
-          { value: 127, label: "qualifying sessions" },
-          { value: 61, label: "team-seasons" },
-          { value: 45, label: "near-tie pairs" },
-        ],
-        pullQuote:
-          "Found the naive design unidentifiable, and reported the effect as undetectable rather than overstating it.",
-        bullets: [
-          "Built a reproducible Python pipeline over 127 qualifying sessions and 61 team-seasons.",
-          "Validated a lap-time pace metric against championship order at Spearman 0.89-0.98.",
-          "Built a near-tie quasi-experiment over 45 adjacent pairs to recover identification.",
-        ],
-      },
-      {
         id: "six-cylinders",
         summary:
           "A weekly show where the two of us break down the money and strategy behind Formula 1, rather than just the racing.",
@@ -159,69 +140,10 @@ export const sections: Section[] = [
     ],
   },
   {
-    id: "experience",
-    label: "EXPERIENCE",
+    id: "startup",
+    label: "STARTUP",
     kind: "timing-tower",
-    entries: [
-      {
-        id: "kaizen",
-        summary:
-          "An analytics consultancy. I built the pricing software that decides what a second-hand item should sell for, across a national US thrift chain.",
-        href: "https://www.kaizenanalytix.com/",
-        image: "/assets/activities/kaizen.jpg",
-        title: "Kaizen Analytix",
-        role: "Data Science & Consulting Intern",
-        location: "Atlanta, Georgia",
-        date: "Summer 2026",
-        stats: [
-          { value: 384, label: "stores clustered" },
-          { value: 6, label: "climate zones" },
-        ],
-        bullets: [
-          "Built ThriftIQ, a dynamic pricing algorithm for US thrift retailer Savers'; featured on CNBC.",
-          "Seasonality model clustering 384 stores into 6 climate zones for demand-based pricing.",
-          "Led enterprise adoption of agentic AI tooling across the Data Science department.",
-        ],
-      },
-      {
-        id: "isvaryam",
-        summary:
-          "A cold-press cooking oil producer. I worked out how to get more oil out of the same seeds by changing the timing of the production run.",
-        href: "https://www.isvaryam.com/",
-        image: "/assets/activities/isvaryam.jpg",
-        title: "Isvaryam Organic Cooking Oils",
-        role: "Operations Intern",
-        location: "Coimbatore, India",
-        date: "Summer 2025",
-        stats: [{ value: 16, suffix: "%", label: "seed oil yield gain" }],
-        bullets: [
-          "Applied a Taguchi design-of-experiments model to optimise production cycle timing.",
-          "Presented to leadership; implementation delivered a 16% improvement in seed oil yield.",
-        ],
-      },
-      {
-        id: "toyota",
-        summary:
-          "A Toyota dealership. I sold new cars to customers on the showroom floor.",
-        href: "https://anaamalaistoyota.com/",
-        image: "/assets/activities/toyota.jpg",
-        title: "Anaamalais Toyota",
-        role: "Salesman",
-        location: "Coimbatore, India",
-        date: "Summer 2024",
-        stats: [{ value: 200, suffix: "+", label: "customers served" }],
-        bullets: [
-          "Supported showroom sales with outreach, test drives and walk-throughs for 200+ customers.",
-          "Managed lead pipeline in CRM; followed up on inquiries and improved conversion tracking.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "projects",
-    label: "PROJECTS & RESEARCH",
-    kind: "grid",
-    blurb: "Filter by what it was.",
+    blurb: "Building something people use.",
     entries: [
       {
         id: "somnia",
@@ -245,6 +167,114 @@ export const sections: Section[] = [
           "TEDx speaker on sleep health; led a 14-person team reaching 1,200+ youth across 5 countries.",
         ],
       },
+    ],
+  },
+  {
+    id: "work",
+    label: "COMPANY WORK",
+    kind: "timing-tower",
+    blurb: "Paid roles, in industry.",
+    entries: [
+      {
+        id: "kaizen",
+        logo: "/assets/logos/kaizen.svg",
+        summary:
+          "An analytics consultancy. I built the pricing software that decides what a second-hand item should sell for, across a national US thrift chain.",
+        href: "https://www.kaizenanalytix.com/",
+        image: "/assets/activities/kaizen.jpg",
+        title: "Kaizen Analytix",
+        role: "Data Science & Consulting Intern",
+        location: "Atlanta, Georgia",
+        date: "Summer 2026",
+        stats: [
+          { value: 384, label: "stores clustered" },
+          { value: 6, label: "climate zones" },
+        ],
+        bullets: [
+          "Built ThriftIQ, a dynamic pricing algorithm for US thrift retailer Savers'; featured on CNBC.",
+          "Seasonality model clustering 384 stores into 6 climate zones for demand-based pricing.",
+          "Led enterprise adoption of agentic AI tooling across the Data Science department.",
+        ],
+      },
+      {
+        id: "isvaryam",
+        logo: "/assets/logos/isvaryam.png",
+        summary:
+          "A cold-press cooking oil producer. I worked out how to get more oil out of the same seeds by changing the timing of the production run.",
+        href: "https://www.isvaryam.com/",
+        image: "/assets/activities/isvaryam.jpg",
+        title: "Isvaryam Organic Cooking Oils",
+        role: "Operations Intern",
+        location: "Coimbatore, India",
+        date: "Summer 2025",
+        stats: [{ value: 16, suffix: "%", label: "seed oil yield gain" }],
+        bullets: [
+          "Applied a Taguchi design-of-experiments model to optimise production cycle timing.",
+          "Presented to leadership; implementation delivered a 16% improvement in seed oil yield.",
+        ],
+      },
+      {
+        id: "toyota",
+        logo: "/assets/logos/toyota.png",
+        summary:
+          "A Toyota dealership. I sold new cars to customers on the showroom floor.",
+        href: "https://anaamalaistoyota.com/",
+        image: "/assets/activities/toyota.jpg",
+        title: "Anaamalais Toyota",
+        role: "Salesman",
+        location: "Coimbatore, India",
+        date: "Summer 2024",
+        stats: [{ value: 200, suffix: "+", label: "customers served" }],
+        bullets: [
+          "Supported showroom sales with outreach, test drives and walk-throughs for 200+ customers.",
+          "Managed lead pipeline in CRM; followed up on inquiries and improved conversion tracking.",
+        ],
+      },
+      {
+        id: "polymarket",
+        logo: "/assets/logos/polymarket.svg",
+        summary:
+          "A prediction market where people bet on real-world events. I researched where new users get stuck and redesigned that flow.",
+        href: "https://polymarket.com/",
+        image: "/assets/activities/polymarket.svg",
+        title: "Polymarket",
+        org: "via Ascend Consulting Group",
+        role: "Analyst",
+        date: "Summer 2026",
+        tags: ["Consulting"],
+        bullets: [
+          "User research and UX wireframe prototyping; proposed activation-flow improvements.",
+        ],
+      },
+    ],
+  },
+  {
+    id: "projects",
+    label: "INDEPENDENT PROJECTS",
+    kind: "grid",
+    blurb: "Questions I picked up on my own.",
+    entries: [
+      {
+        id: "f1-atr",
+        summary:
+          "Formula 1 caps how much aerodynamic testing each team is allowed. This study asks whether that cap actually changes who ends up fastest.",
+        image: "/assets/activities/f1-atr.svg",
+        title: "f1-atr",
+        role: "Independent Research — F1 Aerodynamic Testing Restrictions",
+        date: "2026",
+        stats: [
+          { value: 127, label: "qualifying sessions" },
+          { value: 61, label: "team-seasons" },
+          { value: 45, label: "near-tie pairs" },
+        ],
+        pullQuote:
+          "Found the naive design unidentifiable, and reported the effect as undetectable rather than overstating it.",
+        bullets: [
+          "Built a reproducible Python pipeline over 127 qualifying sessions and 61 team-seasons.",
+          "Validated a lap-time pace metric against championship order at Spearman 0.89-0.98.",
+          "Built a near-tie quasi-experiment over 45 adjacent pairs to recover identification.",
+        ],
+      },
       {
         id: "airline",
         summary:
@@ -260,6 +290,30 @@ export const sections: Section[] = [
         bullets: [
           "Modelled optimal seat allocation across business, premium economy and economy using per-class price elasticity of demand and quadratic revenue functions.",
           "Solved by partial differentiation under a fixed-row constraint, then tested integer configurations.",
+        ],
+      },
+    ],
+  },
+  {
+    id: "research",
+    label: "RESEARCH",
+    kind: "timing-tower",
+    blurb: "Supervised and published work.",
+    entries: [
+      {
+        id: "netflix",
+        summary:
+          "Testing whether Netflix's share price actually moves when it releases new shows, or whether that link is imagined.",
+        href: "https://www.researchgate.net/publication/388502227_How_do_Media_Releases_Affect_Netflix's_Stock",
+        image: "/assets/activities/netflix.svg",
+        title: "Netflix Releases & Stock Price Volatility",
+        role: "Research Author",
+        date: "2022 - 2023",
+        tags: ["Research", "Published"],
+        fastest: true,
+        bullets: [
+          "Econometric analysis under Prof. Julius Vainora (University of Cambridge), applying OLS regression in Python to test the relationship between content release timing and stock volatility.",
+          "25-page paper published in the International Journal of Economics and Management Sciences.",
         ],
       },
       {
@@ -279,50 +333,19 @@ export const sections: Section[] = [
         ],
       },
       {
-        id: "netflix",
-        summary:
-          "Testing whether Netflix's share price actually moves when it releases new shows, or whether that link is imagined.",
-        href: "https://www.researchgate.net/publication/388502227_How_do_Media_Releases_Affect_Netflix's_Stock",
-        image: "/assets/activities/netflix.svg",
-        title: "Netflix Releases & Stock Price Volatility",
-        role: "Research Author",
-        date: "2022 - 2023",
-        tags: ["Research", "Published"],
-        fastest: true,
-        bullets: [
-          "Econometric analysis under Prof. Julius Vainora (University of Cambridge), applying OLS regression in Python to test the relationship between content release timing and stock volatility.",
-          "25-page paper published in the International Journal of Economics and Management Sciences.",
-        ],
-      },
-      {
         id: "sura",
         summary:
           "A five-year study on how students see themselves and which opportunities they take. I built the data models underneath it.",
         href: "https://adamlab.sesp.northwestern.edu/project-overview/",
         image: "/assets/activities/sura.svg",
         title: "IPR SURA Grant",
-        org: "Northwestern SESP",
+        org: "Northwestern Institute for Policy Research",
         role: "Research Assistant",
         date: "Summer 2026",
         tags: ["Research"],
         stats: [{ value: 6, prefix: "$", suffix: "k", label: "grant" }],
         bullets: [
           "Built Python data models to clean and structure datasets for a five-year behavioural study.",
-        ],
-      },
-      {
-        id: "polymarket",
-        summary:
-          "A prediction market where people bet on real-world events. I researched where new users get stuck and redesigned that flow.",
-        href: "https://polymarket.com/",
-        image: "/assets/activities/polymarket.svg",
-        title: "Polymarket",
-        org: "via Ascend Consulting Group",
-        role: "Analyst",
-        date: "Summer 2026",
-        tags: ["Consulting"],
-        bullets: [
-          "User research and UX wireframe prototyping; proposed activation-flow improvements.",
         ],
       },
     ],

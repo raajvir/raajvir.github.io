@@ -63,6 +63,8 @@
 }
 
 .sec-art {
+  /* Gentle movement in the photo; the strong ripple lives in the mask. */
+  filter: url(#art-distort-soft);
   position: absolute;
   left: 0;
   top: 0;
@@ -101,13 +103,6 @@
   }
 }
 
-/* Purple is meaningful, not a generic hover colour: only a genuine
-   fastest-lap entry gets a purple bar (from the start) and a purple title
-   on hover. Every other entry hovers red, same as the sector bar default. */
-.sec-entry--fastest .sec-bar {
-  background: var(--c-purple);
-}
-
 .sec-content {
   position: relative;
   z-index: 1;
@@ -127,10 +122,6 @@
 .sec-entry:hover .sec-title {
   color: var(--c-accent);
   transform: translateX(6px);
-}
-
-.sec-entry--fastest:hover .sec-title {
-  color: var(--c-purple);
 }
 
 .sec-title-link {
@@ -261,14 +252,6 @@
   gap: 10px;
 }
 
-.sec-fastest-badge {
-  font-size: 9px;
-  font-weight: var(--fw-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--c-purple);
-}
-
 .sec-location {
   font-size: 15px;
   font-weight: var(--fw-light);
@@ -335,5 +318,74 @@
   .sec-art {
     -webkit-mask: none !important;
     mask: none !important;
+    filter: none;
+  }
+}
+
+/* ---------- company mark ---------- */
+.sec-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.sec-logo {
+  /* Sits beside the heading, capped so a wide wordmark cannot crowd it. */
+  height: 22px;
+  width: auto;
+  max-width: 110px;
+  object-fit: contain;
+  object-position: left center;
+  flex: 0 0 auto;
+  display: block;
+}
+
+/* ---------- fastest lap ----------
+   A purple-tinted shine travelling along the row's edge, instead of
+   recolouring the text. Purple is F1's fastest-lap colour. */
+.sec-entry--fastest {
+  position: relative;
+}
+
+.sec-entry--fastest::after {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(160, 32, 240, 0) 32%,
+    var(--c-purple) 46%,
+    #d9a4ff 50%,
+    var(--c-purple) 54%,
+    rgba(160, 32, 240, 0) 68%,
+    transparent 100%
+  );
+  background-size: 100% 260%;
+  animation: sec-shine 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes sec-shine {
+  0%   { background-position: 0 -160%; opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { background-position: 0 160%; opacity: 0; }
+}
+
+@media (max-width: 900px) {
+  .sec-entry--fastest::after { display: none; }
+  .sec-logo { height: 18px; max-width: 92px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sec-entry--fastest::after {
+    animation: none;
+    background: var(--c-purple);
+    opacity: 0.5;
   }
 }

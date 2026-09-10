@@ -13,9 +13,10 @@ import "./SectionBlock.css";
 /**
  * Core content renderer, shared by MOTORSPORT and EXPERIENCE. Each entry is
  * a "timing-tower" row: a sector bar wipes in on scroll and the title turns
- * accent-red on hover — or, for a genuine "fastest lap" result, purple from
- * the start. Any other section `kind` still falls back to this layout
- * rather than rendering nothing.
+ * accent-red on hover. A genuine "fastest lap" result is marked by a purple
+ * shine travelling along its edge rather than by recolouring the text. Any
+ * other section `kind` still falls back to this layout rather than
+ * rendering nothing.
  */
 const clamp = (v: number, lo: number, hi: number) =>
   Math.min(Math.max(v, lo), hi);
@@ -157,23 +158,28 @@ export function SectionBlock({ section }: { section: Section }) {
                 />
 
                 <div className="sec-content">
-                  {entry.href ? (
-                    <h3 className="sec-title">
-                      <a
-                        className="sec-title-link"
-                        href={entry.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {entry.title}
-                        <span className="sec-title-arrow" aria-hidden="true">
-                          &rarr;
-                        </span>
-                      </a>
-                    </h3>
-                  ) : (
-                    <h3 className="sec-title">{entry.title}</h3>
-                  )}
+                  <div className="sec-heading">
+                    {entry.logo && (
+                      <img className="sec-logo" src={entry.logo} alt="" aria-hidden="true" />
+                    )}
+                    {entry.href ? (
+                      <h3 className="sec-title">
+                        <a
+                          className="sec-title-link"
+                          href={entry.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {entry.title}
+                          <span className="sec-title-arrow" aria-hidden="true">
+                            &rarr;
+                          </span>
+                        </a>
+                      </h3>
+                    ) : (
+                      <h3 className="sec-title">{entry.title}</h3>
+                    )}
+                  </div>
 
                   {entry.role && <p className="sec-role">{entry.role}</p>}
                   {entry.org && <p className="sec-role sec-org">{entry.org}</p>}
@@ -205,14 +211,7 @@ export function SectionBlock({ section }: { section: Section }) {
                   <div className="sec-date">
                     <div className="sec-date-top">
                       <SplitFlapDate value={entry.date} />
-                      {fastest && (
-                        <span
-                          className="sec-fastest-badge"
-                          title="In F1 timing, purple marks the fastest lap of the session."
-                        >
-                          Fastest lap
-                        </span>
-                      )}
+                      {fastest && <span className="sr-only">Fastest lap</span>}
                     </div>
                     {entry.location && (
                       <div className="sec-location">

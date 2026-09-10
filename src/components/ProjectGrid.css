@@ -102,10 +102,6 @@
   border-color: var(--c-accent);
 }
 
-.proj-card--fastest:hover {
-  border-color: var(--c-purple);
-}
-
 /* Spotlight follow: painted behind the content, only enabled (via the
    --spotlight modifier) on fine pointers with motion allowed. */
 .proj-card::before {
@@ -180,10 +176,6 @@
   color: var(--c-accent);
 }
 
-.proj-card--fastest:hover .proj-arrow {
-  color: var(--c-purple);
-}
-
 /* ---------- top row: date + fastest badge ---------- */
 .proj-top {
   display: flex;
@@ -199,15 +191,6 @@
   color: var(--fg-dim);
 }
 
-.proj-fastest-badge {
-  font-size: 9px;
-  font-weight: var(--fw-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--c-purple);
-  white-space: nowrap;
-}
-
 /* ---------- title ---------- */
 .proj-title {
   margin: 14px 0 0;
@@ -221,10 +204,6 @@
 .proj-card:hover .proj-title {
   color: var(--c-accent);
   transform: translateX(4px);
-}
-
-.proj-card--fastest:hover .proj-title {
-  color: var(--c-purple);
 }
 
 /* ---------- role / org ---------- */
@@ -321,3 +300,45 @@
 }
 
 
+
+/* ---------- fastest lap ----------
+   A purple shine sweeping the card's border, rather than recolouring its
+   text. The two-layer mask paints the gradient in the border ring only. */
+.proj-card--fastest::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    var(--c-purple) 49%,
+    #d9a4ff 52%,
+    var(--c-purple) 55%,
+    transparent 62%
+  );
+  background-size: 280% 100%;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: proj-shine 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes proj-shine {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -80% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proj-card--fastest::after {
+    animation: none;
+    background: var(--c-purple);
+    opacity: 0.45;
+  }
+}
