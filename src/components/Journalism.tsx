@@ -162,6 +162,19 @@ export function Journalism({ section }: { section: Section }) {
                   ))}
                 </ul>
               )}
+
+              {podcast.extraLinks && podcast.extraLinks.length > 0 && (
+                <ul className="journalism-links">
+                  {podcast.extraLinks.map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} target="_blank" rel="noopener noreferrer">
+                        {link.label}
+                        <span aria-hidden="true"> &rarr;</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Reveal>
           )}
 

@@ -15,6 +15,11 @@ const CARD_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 type Field = { key: string; label: string; value: string };
 type Figure = { key: string; label: string; value: string };
 
+/** Plain-language label for the institution — a university or a school. */
+function kickerFor(entry: Entry): string {
+  return /school|college/i.test(entry.title) ? "High School" : "University";
+}
+
 /** Role / location / date, read the way a licence card reads its own fields. */
 function fieldsFor(entry: Entry): Field[] {
   const fields: Field[] = [];
@@ -82,7 +87,7 @@ function LicenceCard({ entry, index, reduced }: { entry: Entry; index: number; r
 
       <div className="cred-licence-main">
         <div className="cred-licence-topline">
-          <span className="cred-licence-kicker">Student Super Licence</span>
+          <span className="cred-licence-kicker">{kickerFor(entry)}</span>
           <span className="cred-licence-status">{statusFor(entry)}</span>
           <span className="cred-licence-no">No. {String(index + 1).padStart(2, "0")}</span>
         </div>

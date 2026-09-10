@@ -66,8 +66,9 @@ export type Section = {
 export const profile = {
   name: "Raajvir Vijay",
   tagline: "Operations research, applied to motorsport.",
+  // Two deliberate lines — the hero reads better brief than complete.
   lede:
-    "Second-year Industrial Engineering & Management Sciences student at Northwestern and Operations Lead of Northwestern Formula Racing. I work at the intersection of operations research and motorsport — formalising constrained-resource problems, estimating them honestly, and turning them into decisions.",
+    "Industrial engineering at Northwestern.\nOperations Lead of its Formula Racing team.",
   location: "Evanston, IL, USA",
   email: "raajvir@u.northwestern.edu",
   phone: "(773) 942-1063",
@@ -209,6 +210,17 @@ export const sections: Section[] = [
     entries: [
       {
         id: "somnia",
+        extraLinks: [
+          {
+            label: "App Store",
+            href: "https://apps.apple.com/us/app/projectsomnia/id6759349200",
+          },
+          {
+            label: "Google Play",
+            href: "https://play.google.com/store/apps/details?id=com.somnia.app&hl=en",
+          },
+          { label: "How Somnia works", href: "https://youtu.be/jUMytD1C8vY" },
+        ],
         summary:
           "A sleep app for people with insomnia. A wristband reads your heartbeat and the app adapts in real time to help you fall asleep.",
         href: "https://projectsomnia.com",
@@ -308,6 +320,7 @@ export const sections: Section[] = [
       },
       {
         id: "alphabeta",
+        href: "https://veritasai.com/",
         institution: { name: "Alpha Beta Investments", logo: "/assets/logos/alphabeta.png" },
         summary:
           "A machine-learning model that estimates how risky an investment portfolio is before you put money into it.",
@@ -396,6 +409,9 @@ export const sections: Section[] = [
     entries: [
       {
         id: "six-cylinders",
+        extraLinks: [
+          { label: "YouTube", href: "https://www.youtube.com/@vraajvir" },
+        ],
         summary:
           "A weekly show where the two of us break down the money and strategy behind Formula 1, rather than just the racing.",
         image: "/assets/activities/six-cylinders.jpg",

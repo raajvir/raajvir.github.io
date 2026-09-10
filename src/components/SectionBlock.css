@@ -335,7 +335,7 @@
      heading would have. */
   /* Tall two-line marks (NFR) need the height; wide single-line wordmarks
      (Kaizen, Polymarket) are held back by max-width instead. */
-  height: 50px;
+  height: 62px;
   width: auto;
   max-width: 210px;
   object-fit: contain;
@@ -391,7 +391,7 @@
 
 @media (max-width: 900px) {
   .sec-entry--fastest::after { display: none; }
-  .sec-logo { height: 38px; max-width: 150px; }
+  .sec-logo { height: 46px; max-width: 150px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

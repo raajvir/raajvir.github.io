@@ -436,15 +436,13 @@
    the case, strap and crown moving together as one rigid assembly. */
 .feature-watch {
   position: absolute;
-  /* The phone's controls occupy its lower-left and the text column starts
-     only ~60px past its right edge, so the watch cannot sit beside them.
-     It drops BELOW the buttons instead, overlapping the phone's bottom-right
-     corner and hanging past the lower edge. */
-  right: -1.6em;
-  bottom: -6.2em;
+  /* Sits large over the phone's lower-right corner, the way the product
+     shot does — the overlap is the point. */
+  right: -1.4em;
+  bottom: -1.1em;
   z-index: 4;
-  width: 3.95em;
-  height: 7.7em;
+  width: 6.4em;
+  height: 12.5em;
   transform: rotate(-6deg);
   filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.4)) drop-shadow(0 3px 7px rgba(0, 0, 0, 0.28));
 }
@@ -626,4 +624,29 @@
     background: var(--c-purple);
     opacity: 0.45;
   }
+}
+
+/* ---------- further links ---------- */
+.feature-links {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.feature-links a {
+  font-size: 15px;
+  color: var(--fg-dim);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.feature-links a:hover,
+.feature-links a:focus-visible {
+  color: var(--fg);
+  border-bottom-color: var(--fg);
 }

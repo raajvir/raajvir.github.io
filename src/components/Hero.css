@@ -133,6 +133,8 @@
   font-weight: var(--fw-light);
   line-height: var(--lh-body);
   color: var(--c-white);
+  /* The copy carries its own line break. */
+  white-space: pre-line;
 }
 
 /* ---------- right column: portrait + helmet ---------- */

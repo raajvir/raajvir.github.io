@@ -337,3 +337,28 @@
     opacity: 1;
   }
 }
+
+/* ---------- further links ---------- */
+.journalism-links {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.journalism-links a {
+  font-size: 15px;
+  color: var(--fg-dim);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.journalism-links a:hover,
+.journalism-links a:focus-visible {
+  color: var(--c-accent);
+  border-bottom-color: var(--c-accent);
+}

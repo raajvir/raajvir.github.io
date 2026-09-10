@@ -29,13 +29,20 @@
 }
 
 .research-row {
+  /* Equal padding above and below so the rule sits exactly halfway between
+     two entries rather than hugging the one above it. */
   padding-top: 48px;
+  padding-bottom: 48px;
   border-top: 1px solid var(--line-soft);
 }
 
 .research-row:first-child {
   padding-top: 0;
   border-top: 0;
+}
+
+.research-row:last-child {
+  padding-bottom: 0;
 }
 
 .research-row-grid {

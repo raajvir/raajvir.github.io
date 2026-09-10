@@ -127,6 +127,19 @@ function FeaturePanel({ entry, reduced, className }: FeaturePanelProps) {
               ))}
             </ul>
           )}
+
+          {entry.extraLinks && entry.extraLinks.length > 0 && (
+            <ul className="feature-links">
+              {entry.extraLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                    <span aria-hidden="true"> &rarr;</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </>
