@@ -1,0 +1,339 @@
+/* ---------- section shell (must match every other section) ---------- */
+.journalism-sec {
+  padding-bottom: 56px;
+}
+
+.journalism-label {
+  display: block;
+  margin-top: 46px;
+  margin-bottom: 44px;
+}
+
+.journalism-label:has(+ .journalism-blurb) {
+  margin-bottom: 10px;
+}
+
+.journalism-blurb {
+  margin: 0 0 34px;
+  font-size: 20px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- two-panel layout ---------- */
+.journalism-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: stretch;
+}
+
+.journalism-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  padding: 30px;
+}
+
+/* ---------- panel header: marker + date ---------- */
+.journalism-panel-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.journalism-marker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--c-accent);
+}
+
+.journalism-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  background: var(--c-accent);
+  animation: journalism-pulse 2s var(--ease-in-out) infinite;
+}
+
+@keyframes journalism-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
+}
+
+.journalism-date {
+  flex: 0 0 auto;
+  font-size: 14px;
+  color: var(--fg);
+}
+
+/* ---------- title / role (shared shape with SectionBlock) ---------- */
+.journalism-title {
+  margin: 0;
+  font-size: var(--fs-role);
+  font-weight: var(--fw-light);
+  color: var(--fg);
+  line-height: 1.15;
+  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+
+.journalism-panel:hover .journalism-title {
+  color: var(--c-accent);
+  transform: translateX(6px);
+}
+
+.journalism-title-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: inherit;
+}
+
+.journalism-title-arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.journalism-title-link:hover .journalism-title-arrow {
+  transform: translateX(4px);
+}
+
+.journalism-role {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: var(--fw-light);
+  color: var(--fg-dim);
+}
+
+/* ---------- waveform ---------- */
+.journalism-wave {
+  position: relative;
+  height: 64px;
+  margin: 24px 0 22px;
+}
+
+.journalism-wave-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.journalism-wave-bar {
+  flex: 1 1 0;
+  min-width: 1px;
+  height: 20%;
+}
+
+.journalism-wave-track--base .journalism-wave-bar {
+  background: var(--fg);
+  opacity: 0.2;
+}
+
+.journalism-wave-played {
+  clip-path: inset(0 100% 0 0);
+}
+
+.journalism-wave-played .journalism-wave-bar {
+  background: var(--c-accent);
+}
+
+.journalism-wave-played--animate {
+  animation: journalism-wave-reveal 14s linear infinite;
+}
+
+@keyframes journalism-wave-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+
+.journalism-wave-center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--line);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.journalism-wave-playhead {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  left: 0;
+  background: var(--c-accent);
+  box-shadow: 0 0 6px rgba(221, 38, 11, 0.5);
+}
+
+.journalism-wave-playhead--animate {
+  animation: journalism-wave-move 14s linear infinite;
+}
+
+@keyframes journalism-wave-move {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+/* ---------- podcast stats ---------- */
+.journalism-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin: 0 0 20px;
+}
+
+.journalism-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.journalism-stat-value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.journalism-stat-label {
+  font-size: 10px;
+  font-weight: var(--fw-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
+}
+
+/* ---------- summary + plain bullets (shared by both panels) ---------- */
+.journalism-summary {
+  margin: 16px 0 0;
+  font-size: 17px;
+  font-weight: var(--fw-light);
+  line-height: var(--lh-body);
+  color: var(--fg);
+}
+
+.journalism-bullets {
+  margin: 14px 0 0;
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.journalism-bullets li {
+  font-size: 16px;
+  font-weight: var(--fw-light);
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.journalism-bullets li + li {
+  margin-top: 8px;
+}
+
+/* ---------- article headline stack (writing panel) ---------- */
+.journalism-headlines {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journalism-headline-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line-soft);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.journalism-headline-row:first-child {
+  padding-top: 0;
+}
+
+.journalism-headline-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.journalism-headline-row:hover {
+  transform: translateX(5px);
+}
+
+.journalism-headline-index {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-dim);
+}
+
+.journalism-headline-text {
+  font-size: 17px;
+  font-weight: var(--fw-light);
+  line-height: 1.35;
+  color: var(--fg);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.journalism-headline-row:hover .journalism-headline-text {
+  color: var(--c-accent);
+}
+
+/* ---------- responsive: stack panels below 820px ---------- */
+@media (max-width: 820px) {
+  .journalism-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .journalism-sec {
+    padding-bottom: 64px;
+  }
+
+  .journalism-panel {
+    padding: 20px;
+  }
+
+  .journalism-wave {
+    height: 52px;
+    margin: 20px 0 18px;
+  }
+
+  .journalism-stats {
+    gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journalism-dot {
+    animation: none;
+    opacity: 1;
+  }
+}

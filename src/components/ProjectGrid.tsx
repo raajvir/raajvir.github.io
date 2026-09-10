@@ -1,25 +1,10 @@
-import { useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import type { Entry, Section } from "../data/site";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { SectionRule } from "./ui/SectionRule";
 import { SkewHeading } from "./ui/SkewHeading";
 import "./ProjectGrid.css";
-
-/** Union of every entry's tags, in stable order of first appearance. */
-function collectTags(entries: Entry[]): string[] {
-  const seen = new Set<string>();
-  const tags: string[] = [];
-  for (const entry of entries) {
-    for (const tag of entry.tags ?? []) {
-      if (!seen.has(tag)) {
-        seen.add(tag);
-        tags.push(tag);
-      }
-    }
-  }
-  return tags;
-}
 
 /**
  * Static echo of CountUp's number formatting (no animation here — cards
@@ -205,25 +190,15 @@ function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
  */
 export function ProjectGrid({ section }: { section: Section }) {
   const reduced = usePrefersReducedMotion();
-  const [activeTag, setActiveTag] = useState<string | null>(null);
   const [canSpotlight] = useState(
     () => typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches
   );
 
   const labelId = `${section.id}-label`;
-  const tags = useMemo(() => collectTags(section.entries), [section.entries]);
-
-  const filtered = useMemo(
-    () =>
-      activeTag === null
-        ? section.entries
-        : section.entries.filter((entry) => entry.tags?.includes(activeTag)),
-    [section.entries, activeTag]
-  );
 
   const spotlightEnabled = canSpotlight && !reduced;
 
-  const cards = filtered.map((entry, i) => (
+  const cards = section.entries.map((entry, i) => (
     <ProjectCard
       key={entry.id}
       entry={entry}
@@ -241,37 +216,6 @@ export function ProjectGrid({ section }: { section: Section }) {
           {section.label}
         </SkewHeading>
         {section.blurb && <p className="proj-blurb">{section.blurb}</p>}
-
-        <div className="proj-filters" role="group" aria-label="Filter projects by category">
-          <button
-            type="button"
-            className={`proj-chip${activeTag === null ? " proj-chip--active" : ""}`}
-            aria-pressed={activeTag === null}
-            onClick={() => setActiveTag(null)}
-          >
-            All
-            <span className="proj-chip-count">{section.entries.length}</span>
-          </button>
-          {tags.map((tag) => {
-            const count = section.entries.filter((entry) => entry.tags?.includes(tag)).length;
-            return (
-              <button
-                key={tag}
-                type="button"
-                className={`proj-chip${activeTag === tag ? " proj-chip--active" : ""}`}
-                aria-pressed={activeTag === tag}
-                onClick={() => setActiveTag(tag)}
-              >
-                {tag}
-                <span className="proj-chip-count">{count}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <p className="sr-only" role="status" aria-live="polite">
-          {`Showing ${filtered.length} of ${section.entries.length} projects`}
-        </p>
 
         {reduced ? (
           <div className="proj-grid">{cards}</div>

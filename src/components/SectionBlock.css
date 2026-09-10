@@ -333,7 +333,9 @@
 .sec-logo {
   /* Stands in for the company name, so it carries the weight a 30px
      heading would have. */
-  height: 34px;
+  /* Tall two-line marks (NFR) need the height; wide single-line wordmarks
+     (Kaizen, Polymarket) are held back by max-width instead. */
+  height: 50px;
   width: auto;
   max-width: 210px;
   object-fit: contain;
@@ -389,7 +391,7 @@
 
 @media (max-width: 900px) {
   .sec-entry--fastest::after { display: none; }
-  .sec-logo { height: 26px; max-width: 150px; }
+  .sec-logo { height: 38px; max-width: 150px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

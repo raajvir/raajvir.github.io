@@ -5,6 +5,7 @@ import { SectionBlock } from "./components/SectionBlock";
 import { ProjectGrid } from "./components/ProjectGrid";
 import { Feature } from "./components/Feature";
 import { ResearchList } from "./components/ResearchList";
+import { Journalism } from "./components/Journalism";
 import { Credentials } from "./components/Credentials";
 import { SkillsMarquee } from "./components/SkillsMarquee";
 import { Podium } from "./components/Podium";
@@ -28,6 +29,8 @@ function renderSection(section: Section) {
       return <Feature key={section.id} section={section} />;
     case "papers":
       return <ResearchList key={section.id} section={section} />;
+    case "media":
+      return <Journalism key={section.id} section={section} />;
     case "credentials":
       return <Credentials key={section.id} section={section} />;
     default:
@@ -48,9 +51,12 @@ export default function App() {
       <Header />
       <main id="main">
         <Hero launched={launched} />
-        {sections.map(renderSection)}
+        {/* Journalism sits after the podium, so the page closes on the
+            writing rather than on a list of credentials. */}
+        {sections.filter((s) => s.id !== "journalism").map(renderSection)}
         <SkillsMarquee />
         <Podium />
+        {sections.filter((s) => s.id === "journalism").map(renderSection)}
         <References />
         <Contact />
       </main>

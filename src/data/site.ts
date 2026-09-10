@@ -48,6 +48,7 @@ export type SectionKind =
   | "timing-tower"   // the classic entry list, F1 timing-tower styling
   | "feature"        // a single headline entry, given a panel of its own
   | "papers"         // research, laid out like a citation list
+  | "media"          // podcast + writing, one panel each
   | "grid"           // card grid, filterable
   | "credentials"    // education / super-licence cards
   | "skills"         // marquee chip rows
@@ -93,21 +94,23 @@ export const heroSocials = [
 ] as const;
 
 export const nav = [
-  { label: "Motorsport", href: "#motorsport" },
   { label: "Work", href: "#work" },
+  { label: "Projects", href: "#projects" },
   { label: "Research", href: "#research" },
+  { label: "Journalism", href: "#journalism" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
 export const sections: Section[] = [
   {
-    id: "motorsport",
-    label: "MOTORSPORT",
+    id: "work",
+    label: "COMPANY WORK",
     kind: "timing-tower",
-    blurb: "Where the operations research actually gets tested.",
+    blurb: "Paid roles, in industry.",
     entries: [
       {
         id: "nfr",
+        logo: "/assets/logos/nfr.png",
         summary:
           "Northwestern's student motorsport team — we design, build and race a single-seater car every season. I run the operations side of it.",
         href: "https://www.northwesternformularacing.com/",
@@ -125,62 +128,6 @@ export const sections: Section[] = [
           "Restructured project tracking into Jira — milestones, dependencies, visible schedule slip.",
         ],
       },
-      {
-        id: "six-cylinders",
-        summary:
-          "A weekly show where the two of us break down the money and strategy behind Formula 1, rather than just the racing.",
-        image: "/assets/activities/six-cylinders.jpg",
-        title: "Six Cylinders F1 Podcast",
-        role: "Co-Host",
-        date: "2024 - Present",
-        href: "https://open.spotify.com/show/5TLr4ppyyc6ubxxLTt861A?si=9a65c4266bc64cf0",
-        stats: [
-          { value: 8, label: "episodes" },
-          { value: 100, suffix: "+", label: "viewers per episode" },
-        ],
-        bullets: [
-          "Weekly analysis on Formula 1 economics, commercial strategy and regulation.",
-          "8 episodes across the 2024 season.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "startup",
-    label: "STARTUP",
-    kind: "feature",
-    blurb: "Building something people use.",
-    entries: [
-      {
-        id: "somnia",
-        summary:
-          "A sleep app for people with insomnia. A wristband reads your heartbeat and the app adapts in real time to help you fall asleep.",
-        href: "https://projectsomnia.com",
-        image: "/assets/activities/somnia.jpg",
-        title: "Somnia",
-        org: "Sleep-tech Startup — Northwestern Garage",
-        role: "Founder & CEO",
-        date: "2023 - Present",
-        tags: ["Startup"],
-        fastest: true,
-        stats: [
-          { value: 12, prefix: "$", suffix: "K", label: "pre-seed" },
-          { value: 1000, suffix: "+", label: "users" },
-          { value: 1200, suffix: "+", label: "youth reached" },
-        ],
-        bullets: [
-          "Sleep-tech app with patent-pending biosensor wristband; $12K pre-seed funding; 1,000+ users.",
-          "TEDx speaker on sleep health; led a 14-person team reaching 1,200+ youth across 5 countries.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "work",
-    label: "COMPANY WORK",
-    kind: "timing-tower",
-    blurb: "Paid roles, in industry.",
-    entries: [
       {
         id: "kaizen",
         logo: "/assets/logos/kaizen.svg",
@@ -242,7 +189,7 @@ export const sections: Section[] = [
         summary:
           "A prediction market where people bet on real-world events. I researched where new users get stuck and redesigned that flow.",
         href: "https://polymarket.com/",
-        image: "/assets/activities/polymarket.svg",
+        image: "/assets/activities/polymarket.jpg",
         title: "Polymarket",
         org: "via Ascend Consulting Group",
         role: "Analyst",
@@ -250,6 +197,35 @@ export const sections: Section[] = [
         tags: ["Consulting"],
         bullets: [
           "User research and UX wireframe prototyping; proposed activation-flow improvements.",
+        ],
+      },
+    ],
+  },
+  {
+    id: "startup",
+    label: "STARTUP",
+    kind: "feature",
+    blurb: "Building something people use.",
+    entries: [
+      {
+        id: "somnia",
+        summary:
+          "A sleep app for people with insomnia. A wristband reads your heartbeat and the app adapts in real time to help you fall asleep.",
+        href: "https://projectsomnia.com",
+        title: "Somnia",
+        org: "Sleep-tech Startup — Northwestern Garage",
+        role: "Founder & CEO",
+        date: "2023 - Present",
+        tags: ["Startup"],
+        fastest: true,
+        stats: [
+          { value: 1000, suffix: "+", label: "downloads" },
+          { value: 1200, suffix: "+", label: "youth reached" },
+          { value: 2.5, suffix: "x", label: "faster to fall asleep" },
+        ],
+        bullets: [
+          "Sleep-tech app with patent-pending biosensor wristband; $12K pre-seed funding; 1,000+ users.",
+          "TEDx speaker on sleep health; led a 14-person team reaching 1,200+ youth across 5 countries.",
         ],
       },
     ],
@@ -298,7 +274,7 @@ export const sections: Section[] = [
           "Solved by partial differentiation under a fixed-row constraint, then tested integer configurations.",
         ],
       },
-    ],
+],
   },
   {
     id: "research",
@@ -354,7 +330,7 @@ export const sections: Section[] = [
           "A five-year study on how students see themselves and which opportunities they take. I built the data models underneath it.",
         href: "https://adamlab.sesp.northwestern.edu/project-overview/",
         image: "/assets/activities/sura.svg",
-        title: "SURA Grant Recipient",
+        title: "Biology, Identity, & Opportunity Study",
         org: "Northwestern Institute for Policy Research",
         role: "Research Assistant",
         date: "Summer 2026",
@@ -364,7 +340,24 @@ export const sections: Section[] = [
           "Built Python data models to clean and structure datasets for a five-year behavioural study.",
         ],
       },
-    ],
+          {
+        id: "light-sleep",
+        href: "https://ijip.in/articles/light-guided-sleep/",
+        tags: ["Published"],
+        institution: {
+          name: "International Journal of Indian Psychology",
+          logo: "/assets/logos/ijip.png",
+        },
+        title: "Optimizing Light-Guided Sleep Aids",
+        role: "Author",
+        date: "2023-24",
+        summary:
+          "The research behind Somnia: testing which combinations of light colour, brightness and background sound actually get people to sleep faster.",
+        bullets: [
+          "Investigated the combined effects of light hue, brightness, and soundscapes on sleep latency and heart rate variability, identifying optimal conditions for relaxation and improved sleep quality.",
+        ],
+      },
+],
   },
   {
     id: "education",
@@ -392,6 +385,44 @@ export const sections: Section[] = [
         location: "Bengaluru, India",
         date: "Class of '25",
         bullets: ["IB Score: 41/45", "IGCSE: 8A* 1A"],
+      },
+    ],
+  },
+  {
+    id: "journalism",
+    label: "JOURNALISM",
+    kind: "media",
+    blurb: "Talking and writing about the sport.",
+    entries: [
+      {
+        id: "six-cylinders",
+        summary:
+          "A weekly show where the two of us break down the money and strategy behind Formula 1, rather than just the racing.",
+        image: "/assets/activities/six-cylinders.jpg",
+        title: "Six Cylinders F1 Podcast",
+        role: "Co-Host",
+        date: "2024 - Present",
+        href: "https://open.spotify.com/show/5TLr4ppyyc6ubxxLTt861A?si=9a65c4266bc64cf0",
+        stats: [
+          { value: 8, label: "episodes" },
+          { value: 100, suffix: "+", label: "viewers per episode" },
+        ],
+        bullets: [
+          "Weekly analysis on Formula 1 economics, commercial strategy and regulation.",
+          "8 episodes across the 2024 season.",
+        ],
+      },
+      {
+        id: "medium",
+        title: "Medium",
+        role: "Automotive design writer",
+        date: "2023 - Present",
+        href: "https://medium.com/@vijay.raajvir",
+        summary:
+          "Design critiques of cars \u2014 redrawing the ones I think got it wrong, and unpacking liveries like Ferrari\u2019s 2026 challenger.",
+        bullets: [
+          "Recent pieces: Fixing the G82 M4, The Ferrari F1-26 Livery Story, 2027 BMW 7 Series design review, Fixing the Porsche 911 GT3.",
+        ],
       },
     ],
   },
