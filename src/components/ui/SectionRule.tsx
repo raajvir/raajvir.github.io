@@ -7,15 +7,12 @@ import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
  */
 export function SectionRule({ dark = false }: { dark?: boolean }) {
   const reduced = usePrefersReducedMotion();
-  const color = dark ? "var(--c-white)" : "var(--c-hairline)";
 
   return (
-    <div
-      aria-hidden="true"
-      style={{ position: "relative", height: 1, width: "100%", overflow: "hidden" }}
-    >
+    <div className={`sec-rule${dark ? " sec-rule--dark" : ""}`} aria-hidden="true">
       <motion.div
-        style={{ height: 1, width: "100%", background: color, transformOrigin: "left center" }}
+        className="sec-rule__line"
+        style={{ transformOrigin: "left center" }}
         initial={reduced ? { scaleX: 1 } : { scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true, margin: "0px 0px -10% 0px" }}

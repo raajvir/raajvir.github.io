@@ -10,9 +10,10 @@ import { References } from "./components/References";
 import { Contact } from "./components/Contact";
 import { SiteFooter } from "./components/SiteFooter";
 import { StartLights } from "./components/StartLights";
+import { useCurrentSection } from "./hooks/useCurrentSection";
+import { DistortField } from "./components/ui/DistortField";
 import { Crosshair } from "./components/ui/Crosshair";
 import { ClickSpark } from "./components/ui/ClickSpark";
-import { useLitSection } from "./hooks/useLitSection";
 import { sections } from "./data/site";
 import type { Section } from "./data/site";
 
@@ -30,11 +31,12 @@ function renderSection(section: Section) {
 
 export default function App() {
   const [launched, setLaunched] = useState(false);
-  useLitSection();
+  useCurrentSection();
 
   return (
     <>
       <StartLights onDone={() => setLaunched(true)} />
+      <DistortField />
       <Crosshair />
       <ClickSpark />
       <Header />

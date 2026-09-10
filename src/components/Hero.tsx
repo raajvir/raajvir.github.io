@@ -15,8 +15,8 @@ import "./Hero.css";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /** Resting / hover / tap spotlight radii, in px. */
-const SPOT_R_HOVER = 135;
-const SPOT_R_TAP = 150;
+const SPOT_R_HOVER = 86;
+const SPOT_R_TAP = 98;
 const SPOT_SPRING = { stiffness: 250, damping: 28 };
 
 type Props = {
@@ -274,8 +274,10 @@ export function Hero({ launched }: Props) {
             size/offset untouched; the wrapper's mask clips it (and anything else in
             the subtree) wherever the spotlight circle is.
           */}
-          <div className="hero-portrait__helmet-wrap" aria-hidden="true">
-            <img ref={helmetRef} src="/assets/helmet.png" alt="" className="hero-portrait__helmet" />
+          <div className="hero-portrait__distort" aria-hidden="true">
+            <div className="hero-portrait__helmet-wrap">
+              <img ref={helmetRef} src="/assets/helmet.png" alt="" className="hero-portrait__helmet" />
+            </div>
           </div>
           <div className="hero-portrait__beam" aria-hidden="true" />
         </motion.figure>

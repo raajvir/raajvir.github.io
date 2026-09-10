@@ -46,9 +46,15 @@ export function Credentials({ section }: { section: Section }) {
       const card = target?.closest<HTMLElement>(".cred-card--has-art");
       const art = card?.querySelector<HTMLElement>(".cred-art");
       if (!art || !card) return;
+      // Clamp the card's centre so it never leaves the row. Its size follows
+      // the image's own aspect ratio, so it has to be measured.
       const r = card.getBoundingClientRect();
-      art.style.setProperty("--art-x", `${event.clientX - r.left}px`);
-      art.style.setProperty("--art-y", `${event.clientY - r.top}px`);
+      const halfW = art.offsetWidth / 2;
+      const halfH = art.offsetHeight / 2;
+      const x = Math.min(Math.max(event.clientX - r.left, halfW), r.width - halfW);
+      const y = Math.min(Math.max(event.clientY - r.top, halfH), r.height - halfH);
+      art.style.setProperty("--art-x", `${x}px`);
+      art.style.setProperty("--art-y", `${y}px`);
     };
 
     grid.addEventListener("pointermove", onMove);
@@ -79,11 +85,7 @@ export function Credentials({ section }: { section: Section }) {
                 className={`cred-card${entry.image ? " cred-card--has-art" : ""}`}
               >
                 {entry.image && !reduced && (
-                  <span
-                    className="cred-art"
-                    aria-hidden="true"
-                    style={{ backgroundImage: `url(${entry.image})` }}
-                  />
+                  <img className="cred-art" src={entry.image} alt="" aria-hidden="true" />
                 )}
                 <span className="cred-bar" aria-hidden="true" />
 

@@ -1,5 +1,6 @@
 .proj-section {
-  /* background/colour come from .surface (see index.css) — do not set them
+  /* Background and colour are inherited from <body>; the section paints
+     nothing of its own
      here, it would break the lit-section inversion transition. */
   padding-bottom: 56px;
 }
@@ -122,12 +123,6 @@
   opacity: 1;
 }
 
-/* On a lit (black) card the same 0.07-alpha red reads as almost nothing,
-   so raise it once the ancestor section inverts. */
-.surface.is-lit .proj-card::before {
-  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(221, 38, 11, 0.14), transparent 70%);
-}
-
 /* ---------- cursor-revealed background art ----------
    A real DOM layer (not a pseudo-element, so it can carry a per-entry
    background-image), painted behind .proj-card-body (z-index 0 vs 1) and
@@ -136,40 +131,25 @@
    the layer's opacity in on hover. The art is dark line-art: it reads as a
    faint texture on a white card, and much more visibly once the card's
    section inverts to black. */
+/* The reveal is an SVG mask whose circle is displaced, so the ripple lands
+   on the boundary and the artwork inside stays crisp. No gradient feather —
+   the mask is a solid fill, cut hard and then distorted. */
 .proj-art {
   position: absolute;
   inset: 0;
   z-index: 0;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  /* `contain` so each image keeps its own aspect ratio rather than being
-     cropped to the card; the circular mask means the letterboxing never
-     reads as empty bars. */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
   opacity: 0;
-  -webkit-mask-image: radial-gradient(
-    circle var(--art-r, 170px) at var(--art-x, 50%) var(--art-y, 50%),
-    #000 0%,
-    #000 82%,
-    transparent 100%
-  );
-  mask-image: radial-gradient(
-    circle var(--art-r, 170px) at var(--art-x, 50%) var(--art-y, 50%),
-    #000 0%,
-    #000 82%,
-    transparent 100%
-  );
-  transition: opacity var(--dur-mid) var(--ease-out);
+  transition: opacity 0.3s var(--ease-out);
 }
 
+/* Near-opaque: the artwork is drawn on near-black, so a faint wash just
+   reads as a smudge on a white card. At full strength it reads as a lens
+   cut through the card. */
 .proj-card--spotlight:hover .proj-art {
-  opacity: 0.12;
-}
-
-.surface.is-lit .proj-card--spotlight:hover .proj-art {
-  opacity: 0.6;
+  opacity: 0.92;
 }
 
 .proj-card-body {
@@ -339,3 +319,5 @@
     font-size: 21px;
   }
 }
+
+

@@ -36,14 +36,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 
 /* ---------- shared type ---------- */
-.section-label {
-  font-size: var(--fs-label);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-label);
-  color: var(--c-accent);
-  text-transform: uppercase;
-}
-
 .tabular { font-variant-numeric: tabular-nums; }
 
 /* screen-reader only */
@@ -60,20 +52,55 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   }
 }
 
-/* ---------- section spotlight ----------
-   Exactly one section is "lit" (inverted to black) at a time — the one
-   crossing the viewport's centre line. Applied from App via useLitSection,
-   which also skips the whole effect under reduced motion. */
-.surface {
-  background-color: var(--bg);
-  color: var(--fg);
-  transition: background-color 0.6s var(--ease-in-out), color 0.6s var(--ease-in-out);
+
+/* ---------- section rule ----------
+   Faint by default; the section you are reading keeps its rule lit red. */
+.sec-rule {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  overflow: hidden;
 }
 
-.surface.is-lit {
-  --bg: var(--c-black);
-  --fg: var(--c-white);
-  --fg-dim: rgba(255, 255, 255, 0.58);
-  --line: rgba(255, 255, 255, 0.22);
-  --line-soft: rgba(255, 255, 255, 0.13);
+.sec-rule__line {
+  height: 1px;
+  width: 100%;
+  background: var(--line);
+  transition: background-color 0.45s var(--ease-out);
+}
+
+.sec-rule--dark .sec-rule__line { background: var(--c-white); }
+
+.is-current .sec-rule__line { background: var(--c-hairline); }
+
+/* ---------- sticky section label ----------
+   Pins just under the header for as long as you are inside the section, so
+   the current sector is always named on screen. */
+.section-label {
+  position: sticky;
+  /* Pin to the SHRUNK header height: by the time a label sticks, the header
+     has already collapsed, and pinning to the full height leaves a gap that
+     entries scroll through. */
+  top: var(--header-h-min);
+  z-index: 20;
+  /* Opaque so entries scrolling underneath do not show through, and stretched
+     past the container so nothing leaks around the edges. */
+  background: var(--bg);
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  padding-block: 18px 14px;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  color: var(--c-accent);
+  text-transform: uppercase;
+  /* Dim while the section is not the one being read. */
+  opacity: 0.4;
+  transition: opacity 0.45s var(--ease-out);
+}
+
+.is-current .section-label { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .section-label { position: static; opacity: 1; }
 }

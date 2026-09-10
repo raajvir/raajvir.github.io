@@ -10,9 +10,9 @@
   --c-muted: #6b6b6b;
 
   /* ---- surface tokens ----
-     Semantic colours every section paints with. The section under the
-     viewport's centre line flips these to the dark set (see `.surface.is-lit`
-     in index.css), so exactly one section is lit at a time as you scroll. */
+     Semantic colours every section paints with. Kept as one indirection so
+     a dark treatment can be reintroduced later without touching every
+     component stylesheet again. */
   --bg: var(--c-white);
   --fg: var(--c-black);
   --fg-dim: #6b6b6b;
@@ -49,6 +49,7 @@
   --container: 1300px;        /* content spans 70 -> 1370 within 1440 */
   --gutter: 24px;
   --header-h: 100px;
+  --header-h-min: 68px;      /* header shrinks to this once scrolled */
 
   /* ---- motion ---- */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -59,8 +60,8 @@
 }
 
 @media (max-width: 1024px) {
-  :root { --fs-hero: 56px; --fs-lede: 20px; --fs-title: 26px; --fs-role: 18px; --header-h: 76px; }
+  :root { --fs-hero: 56px; --fs-lede: 20px; --fs-title: 26px; --fs-role: 18px; --header-h: 76px; --header-h-min: 60px; }
 }
 @media (max-width: 600px) {
-  :root { --fs-hero: 40px; --fs-lede: 17px; --fs-title: 21px; --fs-role: 15px; --fs-label: 13px; --gutter: 20px; --header-h: 64px; }
+  :root { --fs-hero: 40px; --fs-lede: 17px; --fs-title: 21px; --fs-role: 15px; --fs-label: 13px; --gutter: 20px; --header-h: 64px; --header-h-min: 56px; }
 }

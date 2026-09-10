@@ -1,5 +1,6 @@
 .sec {
-  /* background/colour come from .surface (see index.css) — do not set them
+  /* Background and colour are inherited from <body>; the section paints
+     nothing of its own
      here, it would break the lit-section inversion transition. */
   padding-bottom: 56px;
 }
@@ -69,6 +70,9 @@
   pointer-events: none;
   border: 1px solid var(--line);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  /* Applied to the image itself rather than a wrapper, so the card's own
+     edges ripple along with the picture. */
+  filter: url(#art-distort);
   opacity: 0;
   /* The 50% offsets centre the card on the pointer. */
   transform: translate(calc(var(--art-x, 50%) - 50%), calc(var(--art-y, 50%) - 50%))
@@ -192,7 +196,7 @@
 
 /* The plain-language "what is this" line, ahead of the detail bullets. */
 .sec-summary {
-  margin: 0 0 18px;
+  margin: 26px 0 18px;
   max-width: 720px;
   font-size: var(--fs-lede);
   font-weight: var(--fw-light);
@@ -321,5 +325,11 @@
 
   .sec-stat-label {
     font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sec-art {
+    filter: none;
   }
 }

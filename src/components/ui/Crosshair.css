@@ -1,7 +1,15 @@
+/* Links and buttons carry their own `cursor: pointer`, which beats a plain
+   `cursor: none` on the root — so the native arrow reappeared over anything
+   clickable. Forcing it on every element is what actually keeps it hidden. */
 .xhair-hide-native,
-.xhair-hide-native body { cursor: none; }
-/* Text entry still needs a real caret cursor. */
-.xhair-hide-native :is(input, textarea, [contenteditable="true"]) { cursor: auto; }
+.xhair-hide-native * {
+  cursor: none !important;
+}
+
+/* Text entry still needs a real caret. */
+.xhair-hide-native :is(input, textarea, [contenteditable="true"]) {
+  cursor: auto !important;
+}
 
 .xhair {
   position: fixed;
@@ -13,11 +21,7 @@
 }
 .xhair[data-visible="true"] { opacity: 1; }
 
-.xhair-line { position: absolute; background: rgba(221, 38, 11, 0.5); }
-.xhair-line--h { left: 0; top: 0; width: 100%; height: 1px; }
-.xhair-line--v { left: 0; top: 0; width: 1px; height: 100%; }
-
-.xhair-reticle {
+.xhair-ring {
   position: absolute;
   top: 0;
   left: 0;
@@ -27,23 +31,14 @@
   border: 1px solid var(--c-accent);
   border-radius: 50%;
   transition: width 0.18s var(--ease-out), height 0.18s var(--ease-out),
-    margin 0.18s var(--ease-out), border-width 0.18s var(--ease-out);
+    margin 0.18s var(--ease-out), border-width 0.18s var(--ease-out),
+    background-color 0.18s var(--ease-out);
 }
-.xhair-reticle.is-over {
+
+.xhair-ring.is-over {
   width: 48px;
   height: 48px;
   margin: -24px 0 0 -24px;
   border-width: 2px;
-}
-
-.xhair-readout {
-  position: absolute;
-  top: 26px;
-  left: 26px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  color: rgba(221, 38, 11, 0.75);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
+  background: rgba(221, 38, 11, 0.12);
 }

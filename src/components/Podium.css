@@ -88,22 +88,6 @@
   outline-offset: 4px;
 }
 
-/* When the section itself inverts to black, a solid-black block would
-   vanish into the surface — raise it off the background instead and give
-   it a hairline outline so its edges (and the P1 accent outline) stay
-   legible. Numerals stay white/red since they already read fine on the
-   raised tone. */
-.surface.is-lit .podium-block {
-  background: rgba(255, 255, 255, 0.07);
-  outline: 1px solid var(--line);
-  outline-offset: -1px;
-}
-
-.surface.is-lit .podium-col--p1 .podium-block {
-  outline: 1px solid var(--c-accent);
-  outline-offset: 4px;
-}
-
 .podium-num {
   display: inline-flex;
   align-items: flex-start;

@@ -59,7 +59,9 @@ type CardProps = {
 
 function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const holeRef = useRef<SVGCircleElement>(null);
   const fastest = entry.fastest === true;
+  const maskId = `art-hole-${entry.id}`;
 
   function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
     if (!canSpotlight || !ref.current) return;
@@ -68,10 +70,14 @@ function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
     const y = `${event.clientY - rect.top}px`;
     ref.current.style.setProperty("--mx", x);
     ref.current.style.setProperty("--my", y);
-    // Cursor-revealed background art shares the same coordinate space as
-    // the red spotlight above, just under its own custom properties.
-    ref.current.style.setProperty("--art-x", x);
-    ref.current.style.setProperty("--art-y", y);
+    // The reveal is an SVG mask rather than a CSS gradient: only the mask's
+    // circle carries the displacement filter, so the boundary ripples while
+    // the artwork underneath stays sharp.
+    const hole = holeRef.current;
+    if (hole) {
+      hole.setAttribute("cx", String(event.clientX - rect.left));
+      hole.setAttribute("cy", String(event.clientY - rect.top));
+    }
   }
 
   const hasArt = canSpotlight && Boolean(entry.image);
@@ -170,7 +176,27 @@ function ProjectCard({ entry, index, reduced, canSpotlight }: CardProps) {
       className={cardClassName}
     >
       {hasArt && (
-        <div className="proj-art" aria-hidden="true" style={{ backgroundImage: `url(${entry.image})` }} />
+        <svg className="proj-art" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <mask id={maskId} maskUnits="userSpaceOnUse">
+              <circle
+                ref={holeRef}
+                cx="-500"
+                cy="-500"
+                r="140"
+                fill="#fff"
+                filter="url(#art-distort)"
+              />
+            </mask>
+          </defs>
+          <image
+            href={entry.image}
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMid meet"
+            mask={`url(#${maskId})`}
+          />
+        </svg>
       )}
       {cardBody}
     </motion.div>
